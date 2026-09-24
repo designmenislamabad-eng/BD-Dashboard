@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    if (localStorage.getItem('bd_user_role') === 'admin' || localStorage.getItem('bd_login_user') === 'designmenislamabad@gmail.com') document.documentElement.classList.add('role-admin');
+  </script>
+  <title>BD Dashboard - Designmen</title>
+  <link rel="icon" type="image/jpeg" href="https://lh3.googleusercontent.com/d/1ZCTtF1EZVR419OA-1pMz4uf0T-DjpukU" sizes="64x64">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <style>
+    :root {
+      --primary: #2563eb; --primary-hover: #1d4ed8; --primary-light: #eff6ff;
+      --secondary: #4f46e5; --success: #10b981; --success-light: #ecfdf5;
+      --warning: #f59e0b; --warning-light: #fffbeb; --danger: #ef4444;
+      --danger-light: #fef2f2; --info: #06b6d4; --info-light: #ecfeff;
+      --slate-50: #f8fafc; --slate-100: #f1f5f9; --slate-200: #e2e8f0;
+      --slate-300: #cbd5e1; --slate-700: #334155; --slate-800: #1e293b;
+      --slate-900: #0f172a;
+      --font-main: 'Outfit', sans-serif;
+      --shadow-sm: 0 1px 2px 0 rgba(0,0,0,.05);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);
+      --radius-sm: 6px; --radius-md: 12px; --radius-lg: 16px;
+      --transition: all .25s cubic-bezier(.4,0,.2,1);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:var(--font-main);background:var(--slate-50);color:var(--slate-900);line-height:1.5;overflow-x:hidden;}
+    .app-layout{display:flex;min-height:100vh;}
+    /* SIDEBAR */
+    .sidebar{width:280px;background:var(--slate-900);color:white;padding:2rem 1.5rem;display:flex;flex-direction:column;position:fixed;height:100vh;z-index:100;transition:var(--transition);}
+    .brand-section{display:flex;align-items:center;gap:.75rem;margin-bottom:3rem;}
+    .brand-logo{width:40px;height:40px;border-radius:0;display:block;object-fit:cover;box-shadow:0 4px 12px rgba(37,99,235,.3);}
+    .brand-info h1{font-size:1.15rem;font-weight:700;letter-spacing:.5px;line-height:1.2;}
+    .brand-info span{font-size:.75rem;color:var(--slate-300);text-transform:uppercase;letter-spacing:1px;}
+    .nav-list{list-style:none;display:flex;flex-direction:column;gap:.5rem;}
+    .nav-item button{width:100%;display:flex;align-items:center;gap:1rem;background:none;border:none;color:var(--slate-300);padding:.85rem 1rem;font-family:var(--font-main);font-size:.95rem;font-weight:500;border-radius:var(--radius-md);cursor:pointer;text-align:left;transition:var(--transition);}
+    .nav-item button:hover{background:rgba(255,255,255,.05);color:white;}
+    .nav-item.active button{background:var(--primary);color:white;box-shadow:0 4px 12px rgba(37,99,235,.25);}
+    .nav-item button svg{width:20px;height:20px;fill:currentColor;flex-shrink:0;}
+    .sidebar-footer{margin-top:auto;padding-top:1rem;border-top:1px solid rgba(255,255,255,.1);font-size:.75rem;color:var(--slate-300);}
+    /* MAIN */
+    .main-content{flex:1;margin-left:280px;padding:2.5rem;min-width:0;}
+    .top-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2.5rem;padding-bottom:1.25rem;border-bottom:1px solid var(--slate-200);}
+    .dashboard-filters{display:flex;align-items:center;gap:.6rem;margin-left:auto;margin-right:1rem;flex-wrap:wrap;justify-content:flex-end;}
+    .dashboard-filter{font-family:var(--font-main);font-size:.78rem;padding:.45rem .65rem;border:1px solid var(--slate-200);border-radius:var(--radius-sm);background:white;color:var(--slate-700);outline:none;}
+    .custom-date-range{display:none;align-items:center;gap:.4rem;}
+    .custom-date-range.visible{display:flex;}
+    .page-title h2{font-size:1.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:#1e40af;}
+    .page-title p{font-size:.9rem;color:#0f766e;font-weight:500;}
+    /* METRIC CARDS */
+    .metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1.5rem;margin-bottom:2.5rem;}
+    .metric-card{background:white;border:1px solid var(--slate-200);border-radius:var(--radius-lg);padding:1.5rem;box-shadow:var(--shadow-sm);position:relative;overflow:hidden;transition:var(--transition);cursor:pointer;}
+    .metric-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);}
+    .metric-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--primary);}
+    .metric-card.rfp::before,.metric-card.eoi::before,.metric-card.financial::before,.metric-card.quotation::before{background:var(--primary);}
+    .metric-card.active-proj::before{background:var(--danger);}
+    .status-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;margin-bottom:2rem;}
+    .status-card{background:linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);border:1px solid rgba(96,165,250,.2);border-radius:var(--radius-lg);padding:1.5rem;box-shadow:0 18px 36px rgba(15,23,42,.08);}
+    .status-card-title{display:flex;align-items:center;gap:.75rem;font-size:1rem;font-weight:700;margin-bottom:1rem;color:#0f766e;text-transform:uppercase;letter-spacing:.03em;}
+    .status-list{display:grid;gap:.85rem;}
+    .status-item{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.15rem;border-radius:18px;border:1px solid rgba(148,163,184,.18);background:white;box-shadow:0 10px 20px rgba(15,23,42,.06);font-weight:600;color:var(--slate-700);}
+    .status-item-info{display:flex;align-items:center;gap:.75rem;}
+    .status-status-dot{width:12px;height:12px;border-radius:999px;background:#cbd5e1;flex-shrink:0;}
+    .status-item span{display:flex;align-items:center;gap:.75rem;color:var(--slate-900);}
+    .status-item strong{font-size:1rem;color:var(--slate-900);}
+    .status-item.qualified .status-status-dot{background:#86efac;}
+    .status-item.unqualified .status-status-dot,.status-item.not-qualified .status-status-dot{background:#fca5a5;}
+    .status-item.pending .status-status-dot{background:#fde68a;}
+    .status-item.cancelled .status-status-dot{background:#cbd5e1;}
+    .status-item.awarded .status-status-dot{background:#6ee7b7;}
+    .status-item.not-awarded .status-status-dot{background:#fdba74;}
+    .status-item.default-status .status-status-dot{background:#cbd5e1;}
+    .status-item{cursor:pointer;}
+    .status-item:hover{border-color:rgba(37,99,235,.35);box-shadow:0 10px 20px rgba(37,99,235,.08);}
+    .status-card-footer{margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(148,163,184,.18);display:flex;justify-content:space-between;align-items:center;font-weight:700;color:var(--slate-700);font-size:1rem;}
+    .status-card-footer span{display:inline-flex;align-items:center;gap:.35rem;}
+    .status-card-footer .total-label{color:var(--slate-500);font-weight:600;text-transform:uppercase;letter-spacing:.04em;}
+    .status-card-footer .total-value{color:var(--slate-900);font-size:1.05rem;}
+    .status-empty{color:var(--slate-500);font-size:.95rem;padding:.75rem 0;text-align:center;}
+    .metric-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;}
+    .report-modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.6);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:1.5rem;z-index:2000;opacity:0;pointer-events:none;transition:all .2s ease;}
+    .report-modal-overlay.active{opacity:1;pointer-events:auto;}
+    .report-modal{background:#fff;border-radius:18px;box-shadow:0 24px 60px rgba(15,23,42,.28);width:min(1100px,100%);max-height:85vh;display:flex;flex-direction:column;overflow:hidden;}
+    .report-modal-header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.25rem 1.5rem;border-bottom:1px solid var(--slate-200);}
+    .report-modal-header h3{font-size:1.15rem;font-weight:700;color:var(--slate-900);}
+    .report-modal-header small{display:block;color:var(--slate-500);margin-top:.2rem;}
+    .report-modal-actions{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;}
+    .report-modal-body{overflow:auto;padding:1rem 1.25rem 1.25rem;}
+    .report-modal-pagination{display:flex;align-items:center;justify-content:center;gap:.75rem;padding:0 1.25rem 1.25rem;color:var(--slate-700);font-size:.85rem;}
+    .report-modal-pagination button{font-family:var(--font-main);font-size:.8rem;padding:.4rem .75rem;border:1px solid var(--slate-200);background:white;border-radius:var(--radius-sm);cursor:pointer;}
+    .report-modal-pagination button:disabled{opacity:.5;cursor:not-allowed;}
+    .status-page-jump-input{display:none;width:3.5rem;padding:.35rem .4rem;border:1px solid var(--slate-300);border-radius:var(--radius-sm);font:inherit;text-align:center;}
+    .report-modal-table{width:100%;min-width:680px;table-layout:fixed;border-collapse:collapse;font-size:.9rem;}
+    .report-modal-table th,.report-modal-table td{padding:.75rem .8rem;border-bottom:1px solid var(--slate-200);text-align:left;vertical-align:top;white-space:normal;overflow-wrap:anywhere;word-break:break-word;line-height:1.4;}
+    .report-modal-table th:first-child,.report-modal-table td:first-child{width:80px;}
+    .report-modal-table th:nth-child(2),.report-modal-table td:nth-child(2){width:42%;}
+    .report-modal-table th:nth-child(3),.report-modal-table td:nth-child(3){width:calc(58% - 80px);}
+    .report-modal-table th:nth-child(1),.report-modal-table td:nth-child(1){width:8%;}
+    .report-modal-table th:nth-child(2),.report-modal-table td:nth-child(2){width:28%;}
+    .report-modal-table th:nth-child(3),.report-modal-table td:nth-child(3){width:22%;}
+    .report-modal-table th:nth-child(4),.report-modal-table td:nth-child(4){width:22%;}
+    .report-modal-table th:nth-child(5),.report-modal-table td:nth-child(5){width:20%;}
+    .report-modal-table th{background:var(--slate-100);color:var(--slate-700);font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;}
+    .report-modal-table td{color:var(--slate-800);}
+    .report-modal-table tbody tr:hover{background:var(--slate-50);}
+    .report-modal-empty{padding:2rem 1rem;text-align:center;color:var(--slate-400);font-weight:600;}
+    @media(max-width:600px){.report-modal-overlay{padding:.75rem;}.report-modal{max-height:90vh;}.report-modal-header{align-items:flex-start;flex-direction:column;padding:1rem;}.report-modal-actions{width:100%;}.report-modal-body{padding:.75rem;overflow-x:auto;}.report-modal-table{min-width:620px;font-size:.78rem;}.report-modal-table th,.report-modal-table td{padding:.6rem .45rem;}.report-modal-table th:first-child,.report-modal-table td:first-child{width:8%;}.report-modal-table th:nth-child(2),.report-modal-table td:nth-child(2){width:28%;}.report-modal-table th:nth-child(3),.report-modal-table td:nth-child(3){width:22%;}.report-modal-table th:nth-child(4),.report-modal-table td:nth-child(4){width:22%;}.report-modal-table th:nth-child(5),.report-modal-table td:nth-child(5){width:20%;}}
+    .metric-title{font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--slate-700);}
+    .metric-icon-wrapper{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;background:var(--primary-light);color:var(--primary);}
+    .rfp .metric-icon-wrapper,.eoi .metric-icon-wrapper,.financial .metric-icon-wrapper,.quotation .metric-icon-wrapper{background:var(--primary-light);color:var(--primary);}
+    .active-proj .metric-icon-wrapper{background:var(--danger-light);color:var(--danger);}
+    .status-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.5rem;}
+    .status-column-title{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--slate-700);margin-bottom:.75rem;}
+    @media(max-width:600px){.status-columns{grid-template-columns:1fr;}}
+    #recordsSection,.filter-bar{display:none;}
+    .metric-value{font-size:2.25rem;font-weight:700;line-height:1.1;}
+    /* CHARTS */
+    .charts-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) minmax(260px,.85fr);gap:1.5rem;margin-bottom:2.5rem;}
+    .chart-card{background:white;border:1px solid var(--slate-200);border-radius:var(--radius-lg);padding:1.5rem;box-shadow:var(--shadow-sm);overflow:visible;}
+    .chart-title{font-size:1.1rem;font-weight:700;margin-bottom:1.5rem;text-transform:uppercase;letter-spacing:.03em;}
+    .charts-grid .chart-card:first-child .chart-title{color:#2563eb;}
+    .charts-grid .chart-card:last-child .chart-title{color:#0891b2;}
+    .charts-grid .chart-card:nth-child(3) .chart-title{color:#d97706;}
+    .chart-filters{display:flex;gap:.4rem;flex-wrap:wrap;margin:-.75rem 0 .5rem;}
+    .chart-filter{font-family:var(--font-main);font-size:.72rem;padding:.35rem .45rem;border:1px solid var(--slate-200);border-radius:var(--radius-sm);background:white;color:var(--slate-700);outline:none;min-width:0;flex:1;}
+    .business-filters{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin:-.75rem 0 .5rem;}
+    .business-filters .chart-filter{min-width:130px;}
+    .business-custom-dates{display:none;gap:.4rem;flex:1;min-width:220px;}
+    .business-custom-dates.visible{display:flex;}
+    .business-custom-dates .chart-filter{min-width:0;width:50%;}
+    .business-revenue-total{margin:.35rem 0 .15rem;color:#b45309;font-size:.8rem;font-weight:700;text-align:right;}
+    #statusChart{width:100%;min-height:240px;}
+    #sectorChart,#businessAcquiredChart{width:100%;min-height:300px;}
+    .section-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#d97706;border-bottom:2px solid #fde68a;padding-bottom:.4rem;margin-bottom:1.25rem;}
+    #sectorChart{width:100%;min-height:320px;}
+    /* TABLE */
+    .table-card{background:white;border:1px solid var(--slate-200);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:2rem;}
+    .table-header-row{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 1.5rem;border-bottom:1px solid var(--slate-200);}
+    .table-header-title{font-size:1.05rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:#1e40af;}
+    .table-header-actions{display:flex;align-items:center;gap:.5rem;}
+    .download-menu{position:relative;}
+    .download-menu summary{list-style:none;cursor:pointer;}
+    .download-menu summary::-webkit-details-marker{display:none;}
+    .download-options{position:absolute;right:0;top:calc(100% + .4rem);z-index:20;min-width:190px;padding:.35rem;background:white;border:1px solid var(--slate-200);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);}
+    .download-options button{display:block;width:100%;padding:.6rem .75rem;border:0;border-radius:var(--radius-sm);background:white;color:var(--slate-800);font:inherit;font-size:.8rem;text-align:left;cursor:pointer;}
+    .download-options button:hover{background:var(--primary-light);color:var(--primary);}
+    .download-options .download-divider{height:1px;margin:.25rem 0;background:var(--slate-200);}
+    .table-container{width:100%;overflow-x:auto;}
+    table{width:100%;border-collapse:collapse;text-align:left;font-size:.875rem;}
+    th{background:var(--slate-100);color:var(--slate-700);font-weight:600;padding:.85rem 1rem;text-transform:uppercase;font-size:.7rem;letter-spacing:.5px;border-bottom:1px solid var(--slate-200);white-space:nowrap;}
+    td{padding:.85rem 1rem;border-bottom:1px solid var(--slate-100);color:var(--slate-700);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    tr:last-child td{border-bottom:none;}
+    tr:hover td{background:var(--slate-50);}
+    /* FILTER BAR */
+    .filter-bar{background:white;border:1px solid var(--slate-200);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1.25rem;box-shadow:var(--shadow-sm);display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;}
+    .search-wrapper{flex:1;min-width:220px;position:relative;}
+    .search-wrapper svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--slate-300);}
+    .search-wrapper input{padding:.6rem .8rem .6rem 2.1rem;width:100%;font-family:var(--font-main);font-size:.875rem;border:1px solid var(--slate-200);border-radius:var(--radius-sm);outline:none;transition:var(--transition);}
+    .search-wrapper input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.12);}
+    .filter-group{display:flex;align-items:center;gap:.4rem;}
+    .filter-group label{font-size:.78rem;font-weight:600;color:var(--slate-700);white-space:nowrap;}
+    select.filter-select{font-family:var(--font-main);font-size:.82rem;padding:.45rem .75rem;border:1px solid var(--slate-200);border-radius:var(--radius-sm);background:white;cursor:pointer;outline:none;}
+    /* BADGES */
+    .badge{display:inline-flex;align-items:center;padding:.2rem .6rem;font-size:.72rem;font-weight:600;border-radius:9999px;}
+    .badge-success{background:var(--success-light);color:var(--success);}
+    .badge-warning{background:var(--warning-light);color:var(--warning);}
+    .badge-danger{background:var(--danger-light);color:var(--danger);}
+    .badge-info{background:var(--info-light);color:var(--info);}
+    .badge-neutral{background:var(--slate-100);color:var(--slate-700);}
+    /* BUTTONS */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;font-family:var(--font-main);font-size:.875rem;font-weight:600;padding:.6rem 1.15rem;border-radius:var(--radius-sm);border:1px solid transparent;cursor:pointer;transition:var(--transition);}
+    .btn-primary{background:var(--primary);color:white;}
+    .btn-primary:hover{background:var(--primary-hover);}
+    .btn-secondary{background:white;border-color:var(--slate-200);color:var(--slate-700);}
+    .btn-secondary:hover{background:var(--slate-100);}
+    .btn-danger{background:var(--danger);color:white;}
+    .btn-danger:hover{background:#dc2626;}
+    .btn-sm{padding:.3rem .65rem;font-size:.775rem;}
+    /* PAGINATION */
+    .pagination-bar{display:flex;justify-content:center;align-items:center;gap:.75rem;padding:1.25rem;background:var(--slate-50);border-top:1px solid var(--slate-200);border-radius:0 0 var(--radius-lg) var(--radius-lg);font-size:.875rem;color:var(--slate-700);flex-wrap:wrap;}
+    .pagination-bar button{font-family:var(--font-main);font-size:.85rem;padding:.45rem .9rem;border:1px solid var(--slate-200);background:white;border-radius:var(--radius-sm);cursor:pointer;transition:var(--transition);}
+    .pagination-bar button:hover:not(:disabled){background:var(--slate-100);border-color:var(--primary);}
+    .pagination-bar button:disabled{opacity:.5;cursor:not-allowed;}
+    /* MODAL */
+    .modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.6);backdrop-filter:blur(4px);z-index:1000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:var(--transition);}
+    .modal-overlay.active{opacity:1;pointer-events:auto;}
+    .modal{background:white;border-radius:var(--radius-lg);padding:2rem;width:100%;max-width:460px;box-shadow:var(--shadow-lg);transform:scale(.95);transition:var(--transition);}
+    .modal-overlay.active .modal{transform:scale(1);}
+    .modal-title{font-size:1.2rem;font-weight:700;margin-bottom:.6rem;}
+    .modal-desc{font-size:.9rem;color:var(--slate-700);margin-bottom:1.5rem;}
+    .modal-actions{display:flex;justify-content:flex-end;gap:.75rem;}
+    .alert-item{cursor:pointer;transition:var(--transition);}
+    .alert-item:hover{border-color:var(--primary);box-shadow:0 2px 8px rgba(37,99,235,.12);}
+    .alert-detail-grid{display:grid;grid-template-columns:minmax(120px,140px) minmax(0,1fr);gap:.85rem 1rem;font-size:.95rem;}
+    .alert-detail-label{font-weight:600;color:var(--slate-500);}
+    .alert-detail-value{color:var(--slate-900);min-width:0;overflow-wrap:anywhere;word-break:break-word;white-space:normal;line-height:1.45;}
+    @media(max-width:600px){.alert-detail-grid{grid-template-columns:1fr;gap:.25rem;margin-top:.5rem;}.alert-detail-label{font-size:.78rem;text-transform:uppercase;letter-spacing:.03em;margin-top:.65rem;}.alert-detail-value{padding-bottom:.25rem;}}
+    /* TOAST */
+    .toast-container{position:fixed;bottom:24px;right:24px;z-index:2000;display:flex;flex-direction:column;gap:10px;}
+    .toast{background:var(--slate-900);color:white;padding:.9rem 1.4rem;border-radius:var(--radius-md);box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:.75rem;font-size:.875rem;font-weight:500;border-left:4px solid var(--primary);opacity:0;transform:translateY(20px);animation:toastIn .3s ease forwards;}
+    .toast.success{border-left-color:var(--success);}
+    .toast.error{border-left-color:var(--danger);}
+    @keyframes toastIn{to{opacity:1;transform:translateY(0);}}
+    .toast-close{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.5);cursor:pointer;font-size:1.1rem;line-height:1;}
+    .auth-pending #navForm,.employee #navForm{display:none !important;}
+    .role-admin .auth-pending #navForm{display:list-item !important;}
+    /* LOADING */
+    .loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.8);backdrop-filter:blur(2px);z-index:3000;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:var(--transition);}
+    .loading-overlay.active{opacity:1;pointer-events:auto;}
+    .spinner{width:44px;height:44px;border:4px solid var(--slate-200);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:.9rem;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .loading-overlay p{font-weight:600;color:var(--slate-800);}
+    /* MOBILE */
+    .menu-toggle{display:none;background:none;border:none;color:var(--slate-900);cursor:pointer;}
+    .mobile-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:90;}
+    .mobile-overlay.visible{display:block;}
+    @media(max-width:768px){
+      .sidebar{position:fixed;left:0;top:0;bottom:0;z-index:120;transform:translateX(-105%);transition:transform .25s ease;}
+      .sidebar.open{transform:translateX(0);}
+      .main-content{margin-left:0;padding:1.25rem;}
+      .menu-toggle{display:block;}
+      .charts-grid{display:flex;flex-direction:column;grid-template-columns:none;}
+      .chart-card:nth-child(1){order:1;}
+      .chart-card:nth-child(2){order:2;}
+      .chart-card:nth-child(3){order:3;}
+      .top-header{align-items:flex-start;flex-wrap:wrap;}
+      .dashboard-filters{order:3;width:100%;margin:0;justify-content:flex-start;}
+      .custom-date-range{width:100%;}
+      .custom-date-range .dashboard-filter{flex:1;min-width:0;}
+      .business-filters{align-items:stretch;}
+      .business-filters .chart-filter{flex:1;}
+    }
+    @media(max-width:1024px){.charts-grid{grid-template-columns:1fr;}}
+    .brand-logo{width:40px;height:40px;padding:0;border:0;border-radius:0;background:transparent;display:block;object-fit:contain}
+  </style>
+</head>
+<body class="auth-pending">
+
+<!-- Loading -->
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="spinner"></div>
+  <p id="loadingMsg">Loading Dashboard...</p>
+</div>
+
+<div id="mobileOverlay" class="mobile-overlay" onclick="closeMobileSidebar()"></div>
+
+<!-- Delete Modal -->
+<div id="deleteModal" class="modal-overlay">
+  <div class="modal">
+    <h3 class="modal-title">Confirm Deletion</h3>
+    <p class="modal-desc">Are you sure you want to permanently delete this project record? This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+      <button id="confirmDeleteBtn" class="btn btn-danger">Delete Record</button>
+    </div>
+  </div>
+</div>
+
+<div id="alertDetailModal" class="modal-overlay" onclick="if(event.target===this)closeAlertDetails()">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="alertDetailTitle">
+    <h3 id="alertDetailTitle" class="modal-title">Project Alert</h3>
+    <div class="alert-detail-grid">
+      <div class="alert-detail-label">Project Name</div><div id="alertProjectName" class="alert-detail-value"></div>
+      <div class="alert-detail-label">Client Name</div><div id="alertClientName" class="alert-detail-value"></div>
+      <div class="alert-detail-label">Alert</div><div id="alertType" class="alert-detail-value"></div>
+      <div class="alert-detail-label">Date</div><div id="alertDate" class="alert-detail-value"></div>
+    </div>
+    <div class="modal-actions" style="margin-top:1.5rem;"><button class="btn btn-secondary" onclick="closeAlertDetails()">Close</button></div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toastContainer" class="toast-container"></div>
+
+<div class="app-layout">
+  <!-- SIDEBAR -->
+  <aside id="sidebar" class="sidebar">
+    <div class="brand-section">
+      <img class="brand-logo" src="https://lh3.googleusercontent.com/d/1ZCTtF1EZVR419OA-1pMz4uf0T-DjpukU" alt="DESIGNMEN logo">
+      <div class="brand-info">
+        <h1>DESIGNMEN</h1>
+        <span>BD Portal</span>
+      </div>
+    </div>
+    <nav>
+      <ul class="nav-list">
+        <li class="nav-item active" id="navDashboard">
+          <button onclick="goToDashboard()">
+            <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+            Dashboard Overview
+          </button>
+        </li>
+        <li class="nav-item" id="navForm" style="display:none">
+          <button onclick="goToForm()">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+            Project Entry Form
+          </button>
+        </li>
+        <li class="nav-item" id="navRecords">
+          <button onclick="goToRecords()">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16v2H4V4zm0 5h16v2H4V9zm0 5h16v2H4v-2zm0 5h10v2H4v-2z"/></svg>
+            All Projects Record
+          </button>
+        </li>
+      </ul>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn btn-danger btn-sm" onclick="logoutUser()" style="width:100%;margin-bottom:1rem;">Logout</button>
+      <p style="font-weight:600;">Designmen Consulting</p>
+      <p>Engineers (Pvt) Ltd.</p>
+      <p style="opacity:.5;margin-top:.25rem;">BD Dashboard v2.1</p>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <header class="top-header">
+      <button class="menu-toggle" onclick="toggleMobileSidebar()">
+        <svg style="width:24px;height:24px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+      <div class="page-title">
+        <h2>BD Dashboard</h2>
+        <p>Real-time BD tracking — KPIs, charts & project records.</p>
+      </div>
+      <div class="dashboard-filters">
+        <select id="dashboardDateRange" class="dashboard-filter" onchange="handleDashboardFilterChange()" aria-label="Dashboard date range">
+          <option value="all">All Dates</option>
+          <option value="this-month">This Month</option>
+          <option value="last-3-months">Last 3 Months</option>
+          <option value="last-year">Last Year</option>
+          <option value="custom">Custom Dates</option>
+        </select>
+        <div id="customDateRange" class="custom-date-range">
+          <input id="dashboardStartDate" class="dashboard-filter" type="date" onchange="handleDashboardFilterChange()" aria-label="Dashboard start date">
+          <input id="dashboardEndDate" class="dashboard-filter" type="date" onchange="handleDashboardFilterChange()" aria-label="Dashboard end date">
+        </div>
+        <select id="dashboardSector" class="dashboard-filter" onchange="handleDashboardFilterChange()" aria-label="Dashboard sector">
+          <option value="">All Sectors</option>
+        </select>
+        <select id="dashboardRegion" class="dashboard-filter" onchange="handleDashboardFilterChange()" aria-label="Dashboard region">
+          <option value="">All Region</option>
+          <option value="Federal">Federal</option>
+          <option value="Punjab">Punjab</option>
+          <option value="KPK">KPK</option>
+          <option value="Sindh">Sindh</option>
+          <option value="GB">GB</option>
+          <option value="Baluchistan">Baluchistan</option>
+          <option value="AJ&amp;K">AJ&amp;K</option>
+          <option value="International">International</option>
+        </select>
+      </div>
+    </header>
+
+    <!-- METRICS -->
+    <div class="metrics-grid">
+      <div class="metric-card" ondblclick="openMetricProjectList('total')">
+        <div class="metric-header">
+          <span class="metric-title">Total Applied</span>
+          <div class="metric-icon-wrapper"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg></div>
+        </div>
+        <div class="metric-value" id="stat-total">—</div>
+      </div>
+      <div class="metric-card rfp" ondblclick="openMetricProjectList('rfp')">
+        <div class="metric-header">
+          <span class="metric-title">RFP Applied</span>
+          <div class="metric-icon-wrapper"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
+        </div>
+        <div class="metric-value" id="stat-rfp">—</div>
+      </div>
+      <div class="metric-card eoi" ondblclick="openMetricProjectList('eoi')">
+        <div class="metric-header">
+          <span class="metric-title">EOI/PQD Applied</span>
+          <div class="metric-icon-wrapper"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg></div>
+        </div>
+        <div class="metric-value" id="stat-eoi">—</div>
+      </div>
+      
+      <div class="metric-card financial" ondblclick="openMetricProjectList('financial')">
+        <div class="metric-header">
+          <span class="metric-title">Financial Applied</span>
+          <div class="metric-icon-wrapper"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg></div>
+        </div>
+        <div class="metric-value" id="stat-financial">—</div>
+      </div>
+      <div class="metric-card quotation" ondblclick="openMetricProjectList('quotation')">
+        <div class="metric-header">
+          <span class="metric-title">Quotations Applied</span>
+          <div class="metric-icon-wrapper"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg></div>
+        </div>
+        <div class="metric-value" id="stat-technical">—</div>
+      </div>
+      <div class="metric-card active-proj" ondblclick="openMetricProjectList('active')">
+        <div class="metric-header">
+          <span class="metric-title">Active (Working)</span>
+          <div class="metric-icon-wrapper"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg></div>
+        </div>
+        <div class="metric-value" id="stat-active">—</div>
+      </div>
+    </div>
+
+    <div class="status-grid">
+      <div class="status-card">
+        <div class="status-card-title">Current Status</div>
+        <div class="status-columns">
+          <div>
+            <div id="techStatusList" class="status-list">Loading...</div>
+          </div>
+          <div>
+            <div id="finStatusList" class="status-list">Loading...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="statusListModal" class="report-modal-overlay" aria-hidden="true">
+      <div class="report-modal" role="dialog" aria-modal="true" aria-labelledby="statusListTitle">
+        <div class="report-modal-header">
+          <div>
+            <small>Project Report</small>
+            <h3 id="statusListTitle">Projects</h3>
+          </div>
+          <div class="report-modal-actions">
+            <button class="btn btn-secondary btn-sm" onclick="downloadStatusProjectList('excel')">Export Excel</button>
+            <button class="btn btn-secondary btn-sm" onclick="downloadStatusProjectList('pdf')">Export PDF</button>
+            <button class="btn btn-secondary btn-sm" onclick="closeStatusProjectList()">Close</button>
+          </div>
+        </div>
+        <div id="statusListModalBody" class="report-modal-body"></div>
+        <div id="statusListModalPagination" class="report-modal-pagination" style="display:none;">
+          <button type="button" id="statusListPrev" onclick="goToPreviousStatusListPage()">Previous</button>
+          <div id="statusListPageJumpWrap">
+            <span id="statusListPageInfo" ondblclick="showStatusListPageJumpInput()">Page 1 of 1</span>
+            <input id="statusListPageJumpInput" class="status-page-jump-input" type="number" min="1" value="1" onkeydown="if(event.key==='Enter'){jumpToStatusListPage();}" onblur="hideStatusListPageJumpInput();" aria-label="Jump to status report page">
+          </div>
+          <button type="button" id="statusListNext" onclick="goToNextStatusListPage()">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHARTS -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-title">Growth Tracker</div>
+        <div id="statusChart"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Sector-wise Breakdown</div>
+        <div id="sectorChart"></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Business Acquired</div>
+        <div class="business-filters">
+          <select id="businessDateFilter" class="chart-filter" onchange="handleBusinessFilterChange()" aria-label="Business acquired date filter">
+            <option value="current-year" selected>Current Year</option>
+            <option value="this-month">This Month</option>
+            <option value="last-3-months">Last 3 Months</option>
+            <option value="last-year">Last Year</option>
+            <option value="custom">Custom Date</option>
+          </select>
+          <div id="businessCustomDates" class="business-custom-dates">
+            <input id="businessStartDate" class="chart-filter" type="date" onchange="handleBusinessFilterChange()" aria-label="Business acquired start date">
+            <input id="businessEndDate" class="chart-filter" type="date" onchange="handleBusinessFilterChange()" aria-label="Business acquired end date">
+          </div>
+          <select id="businessSectorFilter" class="chart-filter" onchange="handleBusinessFilterChange()" aria-label="Business acquired sector">
+            <option value="">All Sectors</option>
+            <option>Buildings</option>
+            <option>Infrastructure</option>
+            <option>Energy/Hydropower</option>
+            <option>Water Management</option>
+            <option>Roads</option>
+            <option>Bridges</option>
+            <option>Others</option>
+          </select>
+        </div>
+        <div id="businessRevenueTotal" class="business-revenue-total"></div>
+        <div id="businessAcquiredChart"></div>
+      </div>
+    </div>
+
+    <!-- UPCOMING ALERTS -->
+    <div class="chart-card" id="upcomingAlertsCard" style="margin-bottom:1.5rem;">
+      <div class="section-label">Upcoming Alerts</div>
+      <div id="upcomingAlertsContent" style="padding:.75rem;min-height:48px;color:var(--slate-700);">
+        <div style="color:var(--slate-400);">Loading alerts...</div>
+      </div>
+      <div style="padding:.75rem;border-top:1px solid var(--slate-100);text-align:right;">
+        <small style="color:var(--slate-500);">Show alerts within
+          <select id="alertRangeSelect" onchange="renderUpcomingAlerts()" style="margin-left:.5rem;padding:.25rem;border-radius:6px;border:1px solid var(--slate-200);">
+            <option value="7">7 days</option>
+            <option value="14">14 days</option>
+            <option value="30" selected>30 days</option>
+            <option value="90">90 days</option>
+          </select>
+        </small>
+      </div>
+      <div id="alertsPagination" style="display:none;padding:.5rem;border-top:1px solid var(--slate-100);text-align:center;">
+        <button id="alertsPrev" onclick="goToPrevAlertPage()" disabled style="padding:.35rem .6rem;border:1px solid var(--slate-200);border-radius:6px;background:white;cursor:pointer;margin-right:.5rem;">← Previous</button>
+        <span id="alertsPageInfo" style="color:var(--slate-600);margin:0 .5rem;">Page 1 of 1</span>
+        <button id="alertsNext" onclick="goToNextAlertPage()" disabled style="padding:.35rem .6rem;border:1px solid var(--slate-200);border-radius:6px;background:white;cursor:pointer;margin-left:.5rem;">Next →</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // ─── State ────────────────────────────────────────────
+  var state = { records: [], dashData: null, currentPage: 1, recordsPerPage: 10, filteredRecords: [], authToken: '', userRole: '' };
+  var chartStatus = null, chartSector = null, chartBusiness = null;
+  var deleteTarget = null;
+  var currentStatusListContext = null;
+  var statusListPage = 1;
+  var statusListPageSize = 10;
+
+  function isAdminEmail(email) {
+    return String(email || '').trim().toLowerCase() === 'designmenislamabad@gmail.com';
+  }
+
+  function toggleMobileSidebar() {
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('mobileOverlay');
+    if (!sidebar) return;
+    sidebar.classList.toggle('open');
+    if (overlay) {
+      overlay.classList.toggle('visible', sidebar.classList.contains('open'));
+    }
+  }
+
+  function closeMobileSidebar() {
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('mobileOverlay');
+    if (sidebar) sidebar.classList.remove('open');
+    if (overlay) overlay.classList.remove('visible');
+  }
+
+  // ─── Init ─────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', function() {
+    if (typeof google === 'undefined' || !google.script || !google.script.run) {
+      var staticAccessToken = localStorage.getItem('bd_access_token');
+      if (!staticAccessToken) { window.location.replace('Login.html'); return; }
+      fetch('https://elymgmzexvrbxmlzoohf.supabase.co/auth/v1/user', {
+        headers: { apikey: 'sb_publishable_hnTeB0bxmdQE5ugTBKuPCQ_DXL38Zqx', Authorization: 'Bearer ' + staticAccessToken }
+      }).then(function(response) {
+        if (!response.ok) throw new Error('Session expired. Please log in again.');
+        return response.json();
+      }).then(function(user) {
+        state.userRole = isAdminEmail(user.email) ? 'admin' : 'employee';
+        localStorage.setItem('bd_user_role', state.userRole);
+        document.body.classList.remove('auth-pending');
+        document.body.classList.toggle('employee', state.userRole !== 'admin');
+        if (state.userRole === 'admin') document.getElementById('navForm').style.display = 'list-item';
+        loadStaticDashboard();
+      }).catch(function() {
+        localStorage.removeItem('bd_access_token');
+        localStorage.removeItem('bd_refresh_token');
+        window.location.replace('Login.html');
+      });
+      return;
+    }
+    google.script.url.getLocation(function(location) {
+      state.authToken = location && location.parameter ? location.parameter.token : '';
+      google.script.run.withSuccessHandler(function(user) {
+        state.userRole = user.role;
+        localStorage.setItem('bd_user_role', state.userRole);
+        document.body.classList.remove('auth-pending');
+        document.body.classList.toggle('employee', state.userRole !== 'admin');
+        if (state.userRole === 'admin') document.getElementById('navForm').style.display = 'list-item';
+        refreshAll();
+      }).getSessionUser(state.authToken);
+    });
+
+    var modal = document.getElementById('statusListModal');
+    if (modal) {
+      modal.addEventListener('click', function(event) {
+        if (event.target === modal) closeStatusProjectList();
+      });
+    }
+  });
+
+  // ─── Navigation ───────────────────────────────────────
+  // IMPORTANT: window.location.href gives the sandboxed iframe URL, NOT the
+  // real web app URL. We MUST fetch it from the server via getWebAppUrl().
+  var _cachedWebAppUrl = null;
+
+  function _ensureUrl(callback) {
+    if (_cachedWebAppUrl) { callback(_cachedWebAppUrl); return; }
+    google.script.run
+      .withSuccessHandler(function(url) {
+        _cachedWebAppUrl = url;
+        callback(url);
+      })
+      .withFailureHandler(function() {
+        // Fallback: try window.location (may not work but better than nothing)
+        _cachedWebAppUrl = window.location.href.split('?')[0];
+        callback(_cachedWebAppUrl);
+      })
+      .getWebAppUrl();
+  }
+
+  function goToDashboard() {
+    closeMobileSidebar();
+    showLoading('Loading Dashboard...');
+    _ensureUrl(function(url) {
+      window.top.location.href = url + '?page=dashboard&token=' + encodeURIComponent(state.authToken || '');
+    });
+  }
+
+  function goToForm(editSrNo) {
+    closeMobileSidebar();
+    if (state.userRole !== 'admin') return;
+    showLoading('Opening Entry Form...');
+    if (typeof google === 'undefined' || !google.script || !google.script.run) {
+      window.location.href = 'index.html?form=1' + (editSrNo ? '&edit=' + encodeURIComponent(editSrNo) : '');
+      return;
+    }
+    _ensureUrl(function(url) {
+      var dest = url + '?page=form';
+      if (editSrNo) dest += '&edit=' + editSrNo;
+      dest += '&token=' + encodeURIComponent(state.authToken || '');
+      window.top.location.href = dest;
+    });
+  }
+
+  function goToRecords() {
+    closeMobileSidebar();
+    showLoading('Opening Project Records...');
+    if (typeof google === 'undefined' || !google.script || !google.script.run) {
+      window.location.href = 'Records.html';
+      return;
+    }
+    _ensureUrl(function(url) {
+      window.top.location.href = url + '?page=records&token=' + encodeURIComponent(state.authToken || '');
+    });
+  }
+
+  function logoutUser() {
+    localStorage.removeItem('bd_login_user');
+    localStorage.removeItem('bd_user_role');
+    localStorage.removeItem('bd_access_token');
+    localStorage.removeItem('bd_refresh_token');
+    if (typeof google === 'undefined' || !google.script || !google.script.run) {
+      window.location.href = 'Login.html';
+      return;
+    }
+    google.script.run.withSuccessHandler(function() {
+      _ensureUrl(function(url) { window.top.location.href = url + '?page=login'; });
+    }).logoutUser(state.authToken);
+  }
+
+  // ─── Loading / Toast ──────────────────────────────────
+  function showLoading(msg) {
+    document.getElementById('loadingMsg').innerText = msg || 'Please wait...';
+    document.getElementById('loadingOverlay').classList.add('active');
+  }
+  function hideLoading() {
+    document.getElementById('loadingOverlay').classList.remove('active');
+  }
+  function toast(msg, type) {
+    var c = document.getElementById('toastContainer');
+    var t = document.createElement('div');
+    t.className = 'toast ' + (type || 'success');
+    t.innerHTML = '<span>' + msg + '</span><button class="toast-close" onclick="this.parentElement.remove()">×</button>';
+    c.appendChild(t);
+    setTimeout(function() { t.style.animation = 'toastIn .3s ease reverse'; setTimeout(function(){t.remove();},300); }, 4500);
+  }
+
+  // ─── Data Fetch ───────────────────────────────────────
+  function refreshAll() {
+    if (typeof google === 'undefined' || !google.script || !google.script.run) {
+      loadStaticDashboard();
+      return;
+    }
+    showLoading('Please wait...');
+    var filters = getDashboardFilters();
+    google.script.run
+      .withSuccessHandler(function(data) {
+        state.dashData = data;
+        google.script.run
+          .withSuccessHandler(function(records) {
+            state.records = records || [];
+            populateDashboard();
+            populateDashboardSectorFilter();
+            renderBusinessAcquiredChart();
+            renderUpcomingAlerts();
+            hideLoading();
+            toast('Data refreshed successfully!');
+          })
+          .withFailureHandler(function(err) {
+            hideLoading();
+            toast('Error loading records: ' + err.message, 'error');
+          })
+          .getRecords(state.authToken, true);
+      })
+      .withFailureHandler(function(err) {
+        hideLoading();
+        toast('Connection failed: ' + err.message, 'error');
+      })
+      .getDashboardData(state.authToken, filters.startDate, filters.endDate, filters.sector, filters.region, false);
+  }
+
+  function loadStaticDashboard() {
+    var cachedDashboard = null;
+    try { cachedDashboard = JSON.parse(localStorage.getItem('bd_dashboard_cache') || 'null'); } catch (e) { cachedDashboard = null; }
+    if (cachedDashboard && Array.isArray(cachedDashboard.records)) {
+      state.records = cachedDashboard.records;
+      state.dashData = buildStaticDashboardData(state.records);
+      populateDashboard();
+      populateDashboardSectorFilter();
+      renderBusinessAcquiredChart();
+      renderUpcomingAlerts();
+    } else {
+      showLoading('Loading Dashboard...');
+    }
+    var staticAccessToken = localStorage.getItem('bd_access_token') || 'sb_publishable_hnTeB0bxmdQE5ugTBKuPCQ_DXL38Zqx';
+    fetch('https://elymgmzexvrbxmlzoohf.supabase.co/rest/v1/Project_Entries_Detailed?select=*&order=sr_no.asc', {
+      headers: {
+        apikey: 'sb_publishable_hnTeB0bxmdQE5ugTBKuPCQ_DXL38Zqx',
+        Authorization: 'Bearer ' + staticAccessToken
+      }
+    }).then(function(response) {
+      if (!response.ok) throw new Error('Supabase request failed (' + response.status + ').');
+      return response.json();
+    }).then(function(rows) {
+      state.records = rows.map(function(row) {
+        return {
+          srNo: row.sr_no, projectName: row.project_name, nature: row.nature, sector: row.sector,
+          region: row.region, leadForm: row.lead_form, jv: row.associated_jvs, client: row.client_employer,
+          submissionDate: row.submission_date, technicalOpening: row.technical_opening,
+          financialOpening: row.financial_opening, progressStatus: row.project_progress,
+          currentStatus: row.current_status, finalStatus: row.final_status,
+          awardedGrantedDate: row.awarded_granted_date, quotedFinancialAmount: row.quoted_financial_amount,
+          dealingAddress: row.dealing_person, progressTracking: row.progress_tracking
+        };
+      });
+      localStorage.setItem('bd_dashboard_cache', JSON.stringify({savedAt: Date.now(), records: state.records}));
+      state.dashData = buildStaticDashboardData(state.records);
+      populateDashboard();
+      populateDashboardSectorFilter();
+      renderBusinessAcquiredChart();
+      renderUpcomingAlerts();
+      hideLoading();
+    }).catch(function(error) {
+      hideLoading();
+      toast('Connection failed: ' + error.message, 'error');
+    });
+  }
+
+  function buildStaticDashboardData(records) {
+    var countBy = function(items, field, value) {
+      return items.filter(function(item) { return String(item[field] || '').trim().toLowerCase() === value; }).length;
+    };
+    var nature = function(value) { return String(value || '').trim().toLowerCase(); };
+    var technical = {}, financial = {}, sectors = {};
+    records.forEach(function(record) {
+      var current = String(record.currentStatus || 'Pending').trim();
+      var finalValue = String(record.finalStatus || 'Pending').trim();
+      technical[current] = (technical[current] || 0) + 1;
+      financial[finalValue] = (financial[finalValue] || 0) + 1;
+      var sector = String(record.sector || 'Others').trim() || 'Others';
+      sectors[sector] = (sectors[sector] || 0) + 1;
+    });
+    var toList = function(values) { return Object.keys(values).map(function(status) { return { status: status, count: values[status] }; }); };
+    var total = records.length;
+    var awarded = records.filter(function(record) { var value = nature(record.finalStatus); return value === 'awarded' || value === 'granted'; }).length;
+    return {
+      totalProjects: total,
+      rfpCount: records.filter(function(record) { return nature(record.nature) === 'rfp' || nature(record.nature) === 'epc'; }).length,
+      eoiPqdCount: records.filter(function(record) { return ['eoi', 'pqd', 'enlistment/portal'].indexOf(nature(record.nature)) !== -1; }).length,
+      financialCount: countBy(records, 'nature', 'financial'),
+      technicalCount: countBy(records, 'nature', 'qtn'),
+      activeCount: countBy(records, 'progressStatus', 'working'),
+      technicalStatusCounts: toList(technical),
+      financialStatusCounts: toList(financial),
+      statusData: { qualified: countBy(records, 'currentStatus', 'qualified'), financialQualified: awarded, eoiQualified: countBy(records, 'currentStatus', 'prequalified'), qtnGranted: countBy(records, 'finalStatus', 'granted') },
+      sectorData: Object.keys(sectors).map(function(name) { return { name: name, value: sectors[name] }; })
+    };
+  }
+  function formatDateValue(date) {
+    return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+  }
+  function getDashboardFilters() {
+    var range = document.getElementById('dashboardDateRange').value;
+    var startDate = '', endDate = '';
+    if (range === 'custom') {
+      startDate = document.getElementById('dashboardStartDate').value;
+      endDate = document.getElementById('dashboardEndDate').value;
+    } else if (range === 'this-month') {
+      var now = new Date();
+      startDate = formatDateValue(new Date(now.getFullYear(), now.getMonth(), 1));
+      endDate = formatDateValue(new Date(now.getFullYear(), now.getMonth() + 1, 0));
+    } else if (range === 'last-3-months' || range === 'last-year' || range === 'current-year') {
+      var today = new Date();
+      var start = new Date(today);
+      if (range === 'last-3-months') start.setMonth(start.getMonth() - 3);
+      if (range === 'last-year') start.setFullYear(start.getFullYear() - 1);
+      if (range === 'current-year') start = new Date(today.getFullYear(), 0, 1);
+      startDate = formatDateValue(start);
+      endDate = formatDateValue(today);
+    }
+    return {
+      startDate: startDate,
+      endDate: endDate,
+      sector: document.getElementById('dashboardSector').value,
+      region: document.getElementById('dashboardRegion').value
+    };
+  }
+  function populateDashboardSectorFilter() {
+    var select = document.getElementById('dashboardSector');
+    var selected = select.value;
+    var sectors = ['Buildings', 'Infrastructure', 'Energy/Hydropower', 'Water Management', 'Roads', 'Bridges', 'Others'];
+    select.innerHTML = '<option value="">All Sectors</option>' + sectors.map(function(sector) {
+      return '<option value="' + sector.replace(/"/g, '&quot;') + '">' + sector + '</option>';
+    }).join('');
+    select.value = selected;
+  }
+  function handleDashboardFilterChange() {
+    var range = document.getElementById('dashboardDateRange').value;
+    document.getElementById('customDateRange').classList.toggle('visible', range === 'custom');
+    var filters = getDashboardFilters();
+    if (range === 'custom' && (!filters.startDate || !filters.endDate)) return;
+    if (filters.startDate && filters.endDate && filters.startDate > filters.endDate) {
+      toast('Start date must be before end date.', 'error');
+      return;
+    }
+    if (typeof google === 'undefined' || !google.script || !google.script.run) {
+      showLoading('Updating dashboard...');
+      state.dashData = buildStaticDashboardData(filterStaticDashboardRecords(filters));
+      populateDashboard();
+      renderBusinessAcquiredChart();
+      renderUpcomingAlerts();
+      hideLoading();
+      return;
+    }
+    showLoading('Updating dashboard...');
+    google.script.run
+      .withSuccessHandler(function(data) {
+        state.dashData = data;
+        populateDashboard();
+        renderBusinessAcquiredChart();
+        hideLoading();
+      })
+      .withFailureHandler(function(error) {
+        hideLoading();
+        toast('Filter failed: ' + error.message, 'error');
+      })
+      .getDashboardData(state.authToken, filters.startDate, filters.endDate, filters.sector, filters.region, true);
+  }
+
+  function filterStaticDashboardRecords(filters) {
+    return (state.records || []).filter(function(record) {
+      var dateValue = String(record.submissionDate || '').slice(0, 10);
+      var matchesStart = !filters.startDate || (dateValue && dateValue >= filters.startDate);
+      var matchesEnd = !filters.endDate || (dateValue && dateValue <= filters.endDate);
+      var matchesSector = !filters.sector || String(record.sector || '').trim() === filters.sector;
+      var matchesRegion = !filters.region || String(record.region || '').trim() === filters.region;
+      return matchesStart && matchesEnd && matchesSector && matchesRegion;
+    });
+  }
+  function parseQuotedAmount(value) {
+    var normalized = String(value == null ? '' : value).replace(/,/g, '').replace(/[^\x00-\x7F]/g, '').replace(/[^0-9.-]/g, '');
+    var amount = Number(normalized);
+    return isNaN(amount) ? 0 : amount;
+  }
+  function getBusinessAcquiredFilters() {
+    var range = document.getElementById('businessDateFilter').value;
+    var startDate = '', endDate = '';
+    if (range === 'custom') {
+      startDate = document.getElementById('businessStartDate').value;
+      endDate = document.getElementById('businessEndDate').value;
+    } else if (range === 'this-month') {
+      var now = new Date();
+      startDate = formatDateValue(new Date(now.getFullYear(), now.getMonth(), 1));
+      endDate = formatDateValue(new Date(now.getFullYear(), now.getMonth() + 1, 0));
+    } else if (range === 'last-3-months' || range === 'last-year' || range === 'current-year') {
+      var today = new Date();
+      var start = new Date(today);
+      if (range === 'last-3-months') start.setMonth(start.getMonth() - 3);
+      if (range === 'last-year') {
+        var previousYear = today.getFullYear() - 1;
+        startDate = previousYear + '-01-01';
+        endDate = previousYear + '-12-31';
+      } else {
+        if (range === 'current-year') start = new Date(today.getFullYear(), 0, 1);
+        startDate = formatDateValue(start);
+        endDate = range === 'current-year' ? formatDateValue(new Date(today.getFullYear(), 11, 31)) : formatDateValue(today);
+      }
+    } else if (/^year-\d{4}$/.test(range)) {
+      var year = Number(range.slice(5));
+      startDate = year + '-01-01';
+      endDate = year + '-12-31';
+    }
+    return { startDate: startDate, endDate: endDate, sector: document.getElementById('businessSectorFilter').value };
+  }
+  function handleBusinessFilterChange() {
+    var range = document.getElementById('businessDateFilter').value;
+    document.getElementById('businessCustomDates').classList.toggle('visible', range === 'custom');
+    var filters = getBusinessAcquiredFilters();
+    if (range === 'custom' && (!filters.startDate || !filters.endDate)) return;
+    if (filters.startDate && filters.endDate && filters.startDate > filters.endDate) {
+      toast('Start date must be before end date.', 'error');
+      return;
+    }
+    renderBusinessAcquiredChart();
+  }
+  function renderBusinessAcquiredChart() {
+    var businessFilters = getBusinessAcquiredFilters();
+    var monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var monthlyTotals = {};
+    var eligibleDates = [];
+    (state.records || []).forEach(function(record) {
+      var date = new Date(record.awardedGrantedDate + 'T00:00:00');
+      var finalStatus = String(record.finalStatus || record.currentStatus || '').trim().toLowerCase();
+      var isAwarded = finalStatus === 'awarded' || finalStatus === 'granted' || finalStatus === 'project awarded';
+      var dateValue = isNaN(date) ? '' : formatDateValue(date);
+      var inDateRange = (!businessFilters.startDate || dateValue >= businessFilters.startDate) && (!businessFilters.endDate || dateValue <= businessFilters.endDate);
+      var inSector = !businessFilters.sector || String(record.sector || '').trim() === businessFilters.sector;
+      if (!isAwarded || isNaN(date) || !inDateRange || !inSector) return;
+      var monthKey = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0');
+      monthlyTotals[monthKey] = (monthlyTotals[monthKey] || 0) + parseQuotedAmount(record.quotedFinancialAmount);
+      eligibleDates.push(date);
+    });
+
+    var rangeStart = businessFilters.startDate ? new Date(businessFilters.startDate + 'T00:00:00') : null;
+    var rangeEnd = businessFilters.endDate ? new Date(businessFilters.endDate + 'T00:00:00') : null;
+    if (!rangeStart && eligibleDates.length) {
+      rangeStart = new Date(Math.min.apply(null, eligibleDates));
+    }
+    if (!rangeEnd && eligibleDates.length) {
+      rangeEnd = new Date(Math.max.apply(null, eligibleDates));
+    }
+    var monthKeys = [];
+    if (rangeStart && rangeEnd && rangeStart <= rangeEnd) {
+      var monthCursor = new Date(rangeStart.getFullYear(), rangeStart.getMonth(), 1);
+      var lastMonth = new Date(rangeEnd.getFullYear(), rangeEnd.getMonth(), 1);
+      while (monthCursor <= lastMonth) {
+        monthKeys.push(monthCursor.getFullYear() + '-' + String(monthCursor.getMonth() + 1).padStart(2, '0'));
+        monthCursor.setMonth(monthCursor.getMonth() + 1);
+      }
+    }
+    var chartYears = {};
+    monthKeys.forEach(function(key) { chartYears[key.split('-')[0]] = true; });
+    var showYearInLabel = Object.keys(chartYears).length > 1;
+    var monthLabels = monthKeys.map(function(key) {
+      var parts = key.split('-');
+      return monthNames[Number(parts[1]) - 1] + (showYearInLabel ? ' ' + parts[0] : '');
+    });
+    var values = monthKeys.map(function(key) { return Number((monthlyTotals[key] || 0).toFixed(2)); });
+    var totalRevenue = values.reduce(function(sum, value) { return sum + value; }, 0);
+    var revenueYears = [];
+    if (rangeStart && rangeEnd) {
+      for (var revenueYear = rangeStart.getFullYear(); revenueYear <= rangeEnd.getFullYear(); revenueYear++) {
+        revenueYears.push(revenueYear);
+      }
+    }
+    var revenueYearLabel = revenueYears.length ? revenueYears.join('-') : String(new Date().getFullYear());
+    var previousRevenue = null;
+    var barColors = values.map(function(value) {
+      if (!value) return '#f59e0b';
+      if (previousRevenue === null) {
+        previousRevenue = value;
+        return '#f59e0b';
+      }
+      var color = value < previousRevenue ? '#ef4444' : '#10b981';
+      previousRevenue = value;
+      return color;
+    });
+    var totalEl = document.getElementById('businessRevenueTotal');
+    if (totalEl) totalEl.innerText = 'Total Revenue ' + revenueYearLabel + ': ' + (totalRevenue / 1000000).toFixed(2) + 'M';
+    var el = document.querySelector('#businessAcquiredChart');
+    if (!monthLabels.length) {
+      if (chartBusiness) { chartBusiness.destroy(); chartBusiness = null; }
+      el.innerHTML = '<div style="text-align:center;padding:4rem;color:var(--slate-300);">No quoted business data</div>';
+      return;
+    }
+    el.innerHTML = '';
+    var opts = {
+      chart: { type: 'bar', height: 280, toolbar: { show: false }, fontFamily: 'Outfit, sans-serif' },
+      series: [{ name: 'Business Acquired', data: values }],
+      colors: barColors,
+      plotOptions: { bar: { borderRadius: 4, columnWidth: '42%', distributed: true, dataLabels: { position: 'top' } } },
+      xaxis: { categories: monthLabels, axisBorder: { show: true, color: '#111827' }, axisTicks: { show: true, color: '#111827' }, labels: { rotate: -45, trim: true, style: { colors: '#111827', fontSize: '10px' } } },
+      yaxis: { min: 0, tickAmount: 5, axisBorder: { show: true, color: '#111827' }, labels: { style: { colors: '#111827' }, formatter: function(value) { return (value / 1000000).toFixed(0) + 'M'; } } },
+      grid: { borderColor: '#cbd5e1', strokeDashArray: 4 },
+      legend: { show: false },
+      dataLabels: { enabled: true, formatter: function(value) { return value ? (value / 1000000).toFixed(0) + 'M' : ''; }, style: { colors: ['#92400e'], fontSize: '10px' }, offsetY: -18 },
+      tooltip: { y: { formatter: function(value) { return value.toLocaleString() + ' (' + (value / 1000000).toFixed(2) + 'M)'; } } }
+    };
+    if (chartBusiness) chartBusiness.destroy();
+    chartBusiness = new ApexCharts(el, opts);
+    chartBusiness.render();
+  }
+
+  // ─── Dashboard Population ─────────────────────────────
+  function populateDashboard() {
+    var d = state.dashData;
+    if (!d) return;
+
+    function sumStatusCounts(list) {
+      return (list || []).reduce(function(sum, item) {
+        return sum + (Number(item.count) || 0);
+      }, 0);
+    }
+
+    var technicalStatusTotal = sumStatusCounts(d.technicalStatusCounts);
+    var financialStatusTotal = sumStatusCounts(d.financialStatusCounts);
+
+    document.getElementById('stat-total').innerText = d.totalProjects || 0;
+    document.getElementById('stat-rfp').innerText = d.rfpCount || 0;
+    document.getElementById('stat-eoi').innerText = d.eoiPqdCount || 0;
+    document.getElementById('stat-technical').innerText = d.technicalCount || 0;
+    document.getElementById('stat-financial').innerText = d.financialCount || 0;
+    document.getElementById('stat-active').innerText = d.activeCount || 0;
+    renderStatusBreakdown(d.technicalStatusCounts, d.financialStatusCounts);
+    renderStatusChart(d.statusData);
+    renderSectorChart(d.sectorData);
+  }
+
+  // ─── Upcoming Alerts ─────────────────────────────────
+  function renderUpcomingAlerts() {
+    var container = document.getElementById('upcomingAlertsContent');
+    if (!container) return;
+    var days = Number(document.getElementById('alertRangeSelect').value || 30);
+    var selectedRegion = getDashboardFilters().region;
+    var now = new Date();
+    var end = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
+    var alerts = [];
+    (state.records || []).forEach(function(r) {
+      if (selectedRegion && String(r.region || '').trim() !== selectedRegion) return;
+      if (r.technicalOpening) {
+        var t = new Date(r.technicalOpening);
+        if (!isNaN(t) && t >= now && t <= end) {
+          alerts.push({type: 'Technical Opening', date: t, srNo: r.srNo, project: r.projectName || 'Unnamed Project', client: r.client || r.clientEmployer || '-'});
+        }
+      }
+      if (r.financialOpening) {
+        var f = new Date(r.financialOpening);
+        if (!isNaN(f) && f >= now && f <= end) {
+          alerts.push({type: 'Financial Opening', date: f, srNo: r.srNo, project: r.projectName || 'Unnamed Project', client: r.client || r.clientEmployer || '-'});
+        }
+      }
+      if (r.submissionDate) {
+        var s = new Date(r.submissionDate);
+        if (!isNaN(s) && s >= now && s <= end) {
+          alerts.push({type: 'Submission Date', date: s, srNo: r.srNo, project: r.projectName || 'Unnamed Project', client: r.client || r.clientEmployer || '-'});
+        }
+      }
+    });
+    alerts.sort(function(a,b){ return a.date - b.date; });
+    state.upcomingAlerts = alerts;
+    state.alertsPerPage = 5;
+    state.alertsPage = 1;
+    renderAlertsPage();
+  }
+
+  function renderAlertsPage() {
+    var container = document.getElementById('upcomingAlertsContent');
+    var pagination = document.getElementById('alertsPagination');
+    var pageInfo = document.getElementById('alertsPageInfo');
+    var prevBtn = document.getElementById('alertsPrev');
+    var nextBtn = document.getElementById('alertsNext');
+    if (!container) return;
+    var alerts = state.upcomingAlerts || [];
+    if (!alerts.length) {
+      container.innerHTML = '<div style="padding:.75rem;color:var(--slate-500);">No upcoming alerts in the selected range.</div>';
+      if (pagination) pagination.style.display = 'none';
+      return;
+    }
+    var totalPages = Math.ceil(alerts.length / state.alertsPerPage) || 1;
+    if (state.alertsPage > totalPages) state.alertsPage = totalPages;
+    var start = (state.alertsPage - 1) * state.alertsPerPage;
+    var pageAlerts = alerts.slice(start, start + state.alertsPerPage);
+    var now = new Date();
+    var html = '<div style="display:flex;flex-direction:column;gap:.5rem;">'
+             + '<div style="display:grid;grid-template-columns:1fr auto;gap:1rem;padding:.5rem 0;font-size:.82rem;color:var(--slate-500);border-bottom:1px solid var(--slate-100);">'
+             + '<div>Project Name</div><div style="text-align:right;">Date</div></div>';
+    pageAlerts.forEach(function(a, index){
+      var daysLeft = Math.ceil((a.date - now)/(24*60*60*1000));
+      var dateStr = a.date.toISOString().slice(0,10);
+      html += '<div class="alert-item" role="button" tabindex="0" ondblclick="openAlertDetails(' + (start + index) + ')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){openAlertDetails(' + (start + index) + ')}" style="display:grid;grid-template-columns:1fr auto;gap:1rem;padding:.75rem;border-radius:8px;border:1px solid var(--slate-100);background:white;align-items:center;">'
+           + '<div>'
+           + '<div style="font-weight:600;color:var(--slate-900);">' + (a.project||'Unnamed Project') + '</div>'
+           + '<div style="font-size:.85rem;color:var(--slate-500);">' + a.type + '</div>'
+           + '</div>'
+           + '<div style="text-align:right;">'
+           + '<div style="font-weight:700;color:var(--primary);">' + dateStr + '</div>'
+           + '<div style="font-size:.85rem;color:var(--slate-500);">(' + daysLeft + ' days)</div>'
+           + '</div>'
+           + '</div>';
+    });
+    html += '</div>';
+    container.innerHTML = html;
+    // pagination UI
+    if (pagination) {
+      pagination.style.display = alerts.length > state.alertsPerPage ? 'block' : 'none';
+      pageInfo.innerText = 'Page ' + state.alertsPage + ' of ' + totalPages;
+      prevBtn.disabled = state.alertsPage <= 1;
+      nextBtn.disabled = state.alertsPage >= totalPages;
+    }
+  }
+
+  function goToNextAlertPage() {
+    var alerts = state.upcomingAlerts || [];
+    var totalPages = Math.ceil(alerts.length / state.alertsPerPage) || 1;
+    if (state.alertsPage < totalPages) { state.alertsPage++; renderAlertsPage(); }
+  }
+
+  function goToPrevAlertPage() {
+    if (state.alertsPage > 1) { state.alertsPage--; renderAlertsPage(); }
+  }
+
+  function openAlertDetails(alertIndex) {
+    var alert = (state.upcomingAlerts || [])[alertIndex];
+    var modal = document.getElementById('alertDetailModal');
+    if (!alert || !modal) return;
+    document.getElementById('alertProjectName').textContent = alert.project || '-';
+    document.getElementById('alertClientName').textContent = alert.client || '-';
+    document.getElementById('alertType').textContent = alert.type || '-';
+    document.getElementById('alertDate').textContent = alert.date.toISOString().slice(0, 10);
+    modal.classList.add('active');
+  }
+
+  function closeAlertDetails() {
+    var modal = document.getElementById('alertDetailModal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  function renderStatusChart(s) {
+    if (!s) return;
+    var opts = {
+      chart: { type: 'bar', height: 240, toolbar: { show: false }, fontFamily: 'Outfit, sans-serif' },
+      plotOptions: { bar: { borderRadius: 6, columnWidth: '55%', distributed: true } },
+      colors: ['#2563eb','#10b981','#06b6d4','#f59e0b'],
+      series: [{ name: 'Projects', data: [s.qualified||0, s.financialQualified||0, s.eoiQualified||0, s.qtnGranted||0] }],
+      xaxis: { categories: ['Technical Qualified (RFP)','RFP Awarded','Prequalified (EOI/PQD)','Qtn Granted'], labels: { rotate: 0, rotateAlways: false, trim: false, hideOverlappingLabels: false, style: { colors: '#475569', fontSize: '11px' } } },
+      yaxis: { min: 0, labels: { style: { colors: '#475569' } } },
+      grid: { borderColor: '#e2e8f0', strokeDashArray: 4 },
+      legend: { show: false },
+      dataLabels: { enabled: true, style: { fontWeight: 600 } },
+      tooltip: { y: { formatter: function(v){ return v + ' Projects'; } } }
+    };
+    if (chartStatus) { chartStatus.updateOptions(opts); }
+    else { chartStatus = new ApexCharts(document.querySelector('#statusChart'), opts); chartStatus.render(); }
+  }
+
+  function renderStatusBreakdown(technicalCounts, financialCounts) {
+    var techEl = document.getElementById('techStatusList');
+    var finEl = document.getElementById('finStatusList');
+    function countFor(list, aliases) {
+      return (list || []).reduce(function(total, item) {
+        var value = String(item.status || '').trim().toLowerCase();
+        return aliases.indexOf(value) !== -1 ? total + (Number(item.count) || 0) : total;
+      }, 0);
+    }
+
+    function statusClass(status) {
+      if (!status) return 'default-status';
+      return String(status).trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || 'default-status';
+    }
+
+    function renderList(el, list, definitions) {
+      if (!el) return;
+      el.innerHTML = definitions.map(function(definition) {
+        var item = { status: definition.label, count: countFor(list, definition.aliases) };
+        var cls = statusClass(item.status);
+        var label = item.status.replace(/'/g, "\\'");
+        return '<div class="status-item ' + cls + '" data-status-label="' + label + '" ondblclick="openStatusProjectList(\'' + label + '\')">' +
+               '<div class="status-item-info"><span class="status-status-dot"></span><span>' + item.status + '</span></div>' +
+               '<strong>' + item.count + '</strong>' +
+               '</div>';
+      }).join('');
+    }
+
+    renderList(techEl, technicalCounts, [
+      { label: 'Technical Qualified (RFP)', aliases: ['qualified', 'technical qualified'] },
+      { label: 'Prequalified (EOI/PQD)', aliases: ['prequalified'] },
+      { label: 'Technical Disqualified', aliases: ['technical disqualified'] },
+      { label: 'Not Prequalified', aliases: ['not prequalified'] }
+    ]);
+    renderList(finEl, financialCounts, [
+      { label: "Project's Awarded", aliases: ['awarded', 'granted'] },
+      { label: "Project's Not Awarded", aliases: ['not awarded', 'not granted'] },
+      { label: 'Pending/Under Evaluation', aliases: ['pending/under evaluation'] },
+      { label: 'Cancelled', aliases: ['cancelled', 'client not responded', 'not applied'] }
+    ]);
+  }
+
+  function normalizeStatusText(value) {
+    return String(value || '').trim().toLowerCase().replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ');
+  }
+
+  function getDashboardFilteredRecords() {
+    var filters = getDashboardFilters();
+    return (state.records || []).filter(function(record) {
+      var recordDate = record.submissionDate ? new Date(record.submissionDate + 'T00:00:00') : null;
+      var dateValue = recordDate && !isNaN(recordDate) ? formatDateValue(recordDate) : '';
+      var matchesStart = !filters.startDate || (dateValue && dateValue >= filters.startDate);
+      var matchesEnd = !filters.endDate || (dateValue && dateValue <= filters.endDate);
+      var matchesSector = !filters.sector || String(record.sector || '').trim() === filters.sector;
+      var matchesRegion = !filters.region || String(record.region || '').trim() === filters.region;
+      return matchesStart && matchesEnd && matchesSector && matchesRegion;
+    });
+  }
+
+  function matchesStatusLabel(record, statusLabel) {
+    if (!statusLabel) return false;
+    var label = String(statusLabel).trim();
+    var technicalValue = normalizeStatusText(record.currentStatus || '');
+    var financialValue = normalizeStatusText(record.finalStatus || '');
+
+    if (label === 'Technical Qualified (RFP)') {
+      return technicalValue === 'qualified' || technicalValue === 'technical qualified';
+    }
+    if (label === 'Prequalified (EOI/PQD)') {
+      return technicalValue === 'prequalified';
+    }
+    if (label === 'Technical Disqualified') {
+      return technicalValue === 'disqualified' || technicalValue === 'technical disqualified';
+    }
+    if (label === 'Not Prequalified') {
+      return technicalValue === 'not prequalified' || technicalValue === 'not-qualified';
+    }
+    if (label === "Project's Awarded") {
+      return financialValue === 'awarded' || financialValue === 'granted';
+    }
+    if (label === "Project's Not Awarded") {
+      return financialValue === 'not awarded' || financialValue === 'not granted';
+    }
+    if (label === 'Pending/Under Evaluation') {
+      return financialValue === 'pending/under evaluation';
+    }
+    if (label === 'Cancelled') {
+      return financialValue === 'cancelled' || financialValue === 'client not responded' || financialValue === 'not applied';
+    }
+    return false;
+  }
+
+  function openStatusProjectList(statusLabel) {
+    var label = String(statusLabel || '').trim();
+    var filtered = getDashboardFilteredRecords().filter(function(record) {
+      return matchesStatusLabel(record, label);
+    }).sort(function(a, b) {
+      return Number(a.srNo || 0) - Number(b.srNo || 0);
+    });
+
+    var modal = document.getElementById('statusListModal');
+    var title = document.getElementById('statusListTitle');
+    var body = document.getElementById('statusListModalBody');
+    if (!modal || !body) return;
+
+    title.innerText = label + ' (' + filtered.length + ')';
+    currentStatusListContext = { label: label, rows: filtered };
+    statusListPage = 1;
+
+    if (!filtered.length) {
+      body.innerHTML = '<div class="report-modal-empty">No project found in this category.</div>';
+      document.getElementById('statusListModalPagination').style.display = 'none';
+      modal.classList.add('active');
+      return;
+    }
+
+    renderStatusProjectListPage();
+    modal.classList.add('active');
+  }
+
+  function openMetricProjectList(metric) {
+    var labels = {
+      total: 'Total Applied',
+      rfp: 'RFP Applied',
+      eoi: 'EOI/PQD Applied',
+      financial: 'Financial Applied',
+      quotation: 'Quotations Applied',
+      active: 'Active (Working)'
+    };
+    var filtered = getDashboardFilteredRecords().filter(function(record) {
+      var nature = normalizeStatusText(record.nature);
+      var progressStatus = normalizeStatusText(record.progressStatus || record.technicalStatus);
+      if (metric === 'total') return true;
+      if (metric === 'rfp') return nature === 'rfp' || nature === 'epc';
+      if (metric === 'eoi') return nature === 'eoi' || nature === 'pqd' || nature === 'enlistment/portal';
+      if (metric === 'financial') return nature === 'financial';
+      if (metric === 'quotation') return nature === 'qtn';
+      if (metric === 'active') return progressStatus === 'working';
+      return false;
+    }).sort(function(a, b) {
+      return Number(a.srNo || 0) - Number(b.srNo || 0);
+    });
+
+    var modal = document.getElementById('statusListModal');
+    var title = document.getElementById('statusListTitle');
+    var body = document.getElementById('statusListModalBody');
+    if (!modal || !body) return;
+    title.innerText = labels[metric] + ' (' + filtered.length + ')';
+    currentStatusListContext = { label: labels[metric], rows: filtered };
+    statusListPage = 1;
+    if (!filtered.length) {
+      body.innerHTML = '<div class="report-modal-empty">No project found in this category.</div>';
+      document.getElementById('statusListModalPagination').style.display = 'none';
+    } else {
+      renderStatusProjectListPage();
+    }
+    modal.classList.add('active');
+  }
+
+  function renderStatusProjectListPage() {
+    var context = currentStatusListContext;
+    var body = document.getElementById('statusListModalBody');
+    var pagination = document.getElementById('statusListModalPagination');
+    if (!context || !body) return;
+    var totalPages = Math.ceil(context.rows.length / statusListPageSize) || 1;
+    if (statusListPage > totalPages) statusListPage = totalPages;
+    var start = (statusListPage - 1) * statusListPageSize;
+    var pageRows = context.rows.slice(start, start + statusListPageSize);
+    var isAwardedReport = context.label === "Project's Awarded";
+    var isPendingReport = context.label === 'Pending/Under Evaluation';
+    var rowsHtml = pageRows.map(function(record, index) {
+      var rowHtml = '<tr>' +
+        '<td>' + (start + index + 1) + '</td>' +
+        '<td>' + (record.projectName || '-') + '</td>' +
+        '<td>' + (record.client || record.clientEmployer || '-') + '</td>';
+      if (isAwardedReport || isPendingReport) rowHtml += '<td>' + (record.jv || '-') + '</td>';
+      if (isAwardedReport) rowHtml += '<td>' + (record.quotedFinancialAmount || '-') + '</td>';
+      if (isPendingReport) rowHtml += '<td>' + (record.dealingAddress || record.dealingPerson || '-') + '</td>';
+      return rowHtml + '</tr>';
+    }).join('');
+
+    body.innerHTML = '<table class="report-modal-table"><thead><tr><th>Sr No.</th><th>Project Name</th><th>Client Name</th>' + ((isAwardedReport || isPendingReport) ? '<th>Associated / JVs</th>' : '') + (isAwardedReport ? '<th>Quoted Financial Amount</th>' : '') + (isPendingReport ? '<th>Dealing Person</th>' : '') + '</tr></thead><tbody>' + rowsHtml + '</tbody></table>';
+    pagination.style.display = totalPages > 1 ? 'flex' : 'none';
+    document.getElementById('statusListPageInfo').innerText = 'Page ' + statusListPage + ' of ' + totalPages;
+    var pageInput = document.getElementById('statusListPageJumpInput');
+    if (pageInput) {
+      pageInput.value = statusListPage;
+      pageInput.max = totalPages;
+      pageInput.style.display = 'none';
+      document.getElementById('statusListPageInfo').style.display = 'inline';
+    }
+    document.getElementById('statusListPrev').disabled = statusListPage <= 1;
+    document.getElementById('statusListNext').disabled = statusListPage >= totalPages;
+  }
+
+  function showStatusListPageJumpInput() {
+    var context = currentStatusListContext;
+    var pageInput = document.getElementById('statusListPageJumpInput');
+    var pageInfo = document.getElementById('statusListPageInfo');
+    if (!context || !pageInput || !context.rows.length) return;
+    pageInput.max = Math.ceil(context.rows.length / statusListPageSize) || 1;
+    pageInput.value = statusListPage;
+    pageInfo.style.display = 'none';
+    pageInput.style.display = 'inline-block';
+    setTimeout(function() { pageInput.focus(); pageInput.select(); }, 10);
+  }
+
+  function hideStatusListPageJumpInput() {
+    var pageInput = document.getElementById('statusListPageJumpInput');
+    var pageInfo = document.getElementById('statusListPageInfo');
+    if (!pageInput || !pageInfo) return;
+    pageInput.style.display = 'none';
+    pageInput.value = statusListPage;
+    pageInfo.style.display = 'inline';
+  }
+
+  function jumpToStatusListPage() {
+    var context = currentStatusListContext;
+    var pageInput = document.getElementById('statusListPageJumpInput');
+    if (!context || !pageInput) return;
+    var totalPages = Math.ceil(context.rows.length / statusListPageSize) || 1;
+    var requestedPage = parseInt(pageInput.value, 10);
+    if (isNaN(requestedPage)) {
+      toast('Please enter a valid page number.', 'error');
+      hideStatusListPageJumpInput();
+      return;
+    }
+    statusListPage = Math.max(1, Math.min(totalPages, requestedPage));
+    hideStatusListPageJumpInput();
+    renderStatusProjectListPage();
+  }
+
+  function goToPreviousStatusListPage() {
+    if (statusListPage > 1) {
+      statusListPage--;
+      renderStatusProjectListPage();
+    }
+  }
+
+  function goToNextStatusListPage() {
+    var rows = currentStatusListContext ? currentStatusListContext.rows : [];
+    var totalPages = Math.ceil(rows.length / statusListPageSize) || 1;
+    if (statusListPage < totalPages) {
+      statusListPage++;
+      renderStatusProjectListPage();
+    }
+  }
+
+  function closeStatusProjectList() {
+    var modal = document.getElementById('statusListModal');
+    if (modal) modal.classList.remove('active');
+  }
+
+  function downloadStatusProjectList(format) {
+    if (!currentStatusListContext || !currentStatusListContext.rows || !currentStatusListContext.rows.length) {
+      toast('No project list available to download.', 'error');
+      return;
+    }
+
+    var isAwardedReport = currentStatusListContext.label === "Project's Awarded";
+    var isPendingReport = currentStatusListContext.label === 'Pending/Under Evaluation';
+    var rows = currentStatusListContext.rows.map(function(record, index) {
+      var row = {
+        srNo: index + 1,
+        projectName: record.projectName || '-',
+        clientName: record.client || record.clientEmployer || '-'
+      };
+      if (isAwardedReport || isPendingReport) row.associatedJvs = record.jv || '-';
+      if (isAwardedReport) row.quotedFinancialAmount = record.quotedFinancialAmount || '-';
+      if (isPendingReport) row.dealingPerson = record.dealingAddress || record.dealingPerson || '-';
+      return row;
+    });
+
+    var columns = [
+      { label: 'Sr No.', key: 'srNo' },
+      { label: 'Project Name', key: 'projectName' },
+      { label: 'Client Name', key: 'clientName' }
+    ];
+    if (isAwardedReport || isPendingReport) columns.push({ label: 'Associated / JVs', key: 'associatedJvs' });
+    if (isAwardedReport) columns.push({ label: 'Quoted Financial Amount', key: 'quotedFinancialAmount' });
+    if (isPendingReport) columns.push({ label: 'Dealing Person', key: 'dealingPerson' });
+
+    var tableHtml = '<table><thead><tr>' + columns.map(function(column) {
+      return '<th>' + column.label + '</th>';
+    }).join('') + '</tr></thead><tbody>' + rows.map(function(row) {
+      return '<tr>' + columns.map(function(column) {
+        return '<td>' + (row[column.key] || '-') + '</td>';
+      }).join('') + '</tr>';
+    }).join('') + '</tbody></table>';
+
+    if (format === 'excel') {
+      var excelDocument = '<html><head><meta charset="UTF-8"></head><body><h2>' + currentStatusListContext.label + '</h2>' + tableHtml + '</body></html>';
+      var excelBlob = new Blob(['\ufeff' + excelDocument], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      saveDownload(excelBlob, currentStatusListContext.label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '.xls');
+      return;
+    }
+
+    var printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      toast('Please allow pop-ups to create the PDF.', 'error');
+      return;
+    }
+    printWindow.document.write('<!doctype html><html><head><meta charset="UTF-8"><title>' + currentStatusListContext.label + '</title><style>' +
+      'body{font-family:Arial,sans-serif;color:#0f172a;padding:24px}h2{font-size:20px;margin:0 0 16px}table{width:100%;border-collapse:collapse;font-size:11px}th{background:#e2e8f0;text-align:left;text-transform:uppercase}th,td{border:1px solid #cbd5e1;padding:7px;vertical-align:top}tr:nth-child(even){background:#f8fafc}@media print{body{padding:0}h2{margin-top:0}}' +
+      '</style></head><body><h2>' + currentStatusListContext.label + '</h2>' + tableHtml + '<script>window.onload=function(){window.print();};<\/script></body></html>');
+    printWindow.document.close();
+  }
+
+  function renderSectorChart(data) {
+    var el = document.querySelector('#sectorChart');
+    if (!data || data.length === 0) {
+      el.innerHTML = '<div style="text-align:center;padding:4rem;color:var(--slate-300);">No data yet</div>';
+      return;
+    }
+    var opts = {
+      chart: { type: 'donut', width: '100%', height: 300, fontFamily: 'Outfit, sans-serif' },
+      labels: data.map(function(d){ return d.name; }),
+      series: data.map(function(d){ return d.value; }),
+      colors: ['#2563eb','#7c3aed','#0891b2','#16a34a','#ea580c','#e11d48','#475569'],
+      plotOptions: { pie: { donut: { size: '65%', labels: { show: true, total: { show: true, showAlways: true, label: 'Total', formatter: function() { return ''; } } } } } },
+      legend: { position: 'bottom', fontSize: '12px', labels: { colors: '#475569' } },
+      dataLabels: {
+        enabled: true,
+        formatter: function(value) { return value.toFixed(1) + '%'; },
+        style: { fontSize: '12px', fontWeight: 600, colors: ['#ffffff'] },
+        dropShadow: { enabled: false }
+      },
+      tooltip: { y: { formatter: function(v, context) {
+        var total = context.globals.seriesTotals.reduce(function(sum, item) { return sum + item; }, 0);
+        var percentage = total ? (v / total * 100).toFixed(1) : '0.0';
+        var cleanValue = Number(Number(v).toFixed(2));
+        return cleanValue + '%';
+      } } }
+    };
+    if (chartSector) { chartSector.updateOptions(opts); }
+    else { chartSector = new ApexCharts(el, opts); chartSector.render(); }
+  }
+
+  // ─── Table Rendering ──────────────────────────────────
+  function normalizeTechnicalStatus(status) {
+    var value = String(status || '').trim();
+    var normalized = value.toLowerCase();
+    if (normalized === 'unqualified' || normalized === 'not qualified' || normalized === 'not-qualified') {
+      return 'Not-Qualified';
+    }
+    return value || 'Pending';
+  }
+
+  function badgeClass(s) {
+    var v = String(s||'').trim().toLowerCase();
+    if (v==='qualified'||v==='awarded'||v==='submitted') return 'badge-success';
+    if (v==='pending'||v==='working') return 'badge-warning';
+    if (v==='unqualified'||v==='not qualified'||v==='not-qualified'||v==='not awarded') return 'badge-danger';
+    if (v==='cancelled') return 'badge-neutral';
+    return 'badge-neutral';
+  }
+
+  function renderTable(rows) {
+    state.filteredRecords = rows;
+    state.currentPage = 1;
+    document.getElementById('countBadge').innerText = '(' + rows.length + ' of ' + state.records.length + ')';
+    renderPagedTable();
+  }
+
+  function renderPagedTable() {
+    var rows = state.filteredRecords;
+    var tbody = document.getElementById('recordsBody');
+    var paginationBar = document.getElementById('paginationBar');
+    
+    if (!rows.length) {
+      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:3rem;color:var(--slate-300);">No records found.</td></tr>';
+      paginationBar.style.display = 'none';
+      return;
+    }
+    
+    var start = (state.currentPage - 1) * state.recordsPerPage;
+    var end = start + state.recordsPerPage;
+    var pagedRows = rows.slice(start, end);
+    var totalPages = Math.ceil(rows.length / state.recordsPerPage);
+    
+    tbody.innerHTML = pagedRows.map(function(r) {
+      var technicalStatus = r.progressStatus || r.technicalStatus || 'Pending';
+      return '<tr>' +
+        '<td style="font-weight:600;text-align:center;">' + (r.srNo||'') + '</td>' +
+        '<td style="font-weight:600;color:var(--slate-900);white-space:normal;min-width:160px;" title="'+(r.projectName||'')+'">' + (r.projectName||'-') + '</td>' +
+        '<td><span class="badge badge-info">' + (r.nature||'-') + '</span></td>' +
+        '<td>' + (r.sector||'-') + '</td>' +
+        '<td>' + (r.region||'-') + '</td>' +
+        '<td title="'+(r.client||'')+'" style="white-space:normal;min-width:180px;">' + (r.client||'-') + '</td>' +
+        '<td style="white-space:normal;min-width:140px;">' + (r.submissionDate||'-') + '</td>' +
+        '<td><span class="badge ' + badgeClass(technicalStatus) + '">' + technicalStatus + '</span></td>' +
+        '<td><span class="badge ' + badgeClass(r.currentStatus || r.financialStatus) + '">' + (r.currentStatus || r.financialStatus || 'Pending') + '</span></td>' +
+        '<td style="text-align:center;white-space:nowrap;">' +
+          '<button class="btn btn-secondary btn-sm" onclick="goToForm(' + r.srNo + ')" style="margin-right:4px;">✏ Edit</button>' +
+          (state.userRole === 'admin' ? '<button class="btn btn-secondary btn-sm" onclick="goToForm(' + r.srNo + ')" style="margin-right:4px;">✏ Edit</button>' +
+          '<button class="btn btn-danger btn-sm" onclick="openDelete(' + r.srNo + ')">🗑 Del</button>' : '') +
+        '</td>' +
+      '</tr>';
+    }).join('');
+    
+    if (totalPages <= 1) {
+      paginationBar.style.display = 'none';
+    } else {
+      paginationBar.style.display = 'flex';
+      document.getElementById('pageInfo').innerText = 'Page ' + state.currentPage + ' of ' + totalPages;
+      document.getElementById('prevBtn').disabled = state.currentPage <= 1;
+      document.getElementById('nextBtn').disabled = state.currentPage >= totalPages;
+    }
+  }
+
+  function goToPreviousPage() {
+    if (state.currentPage > 1) { state.currentPage--; renderPagedTable(); }
+  }
+
+  function goToNextPage() {
+    var totalPages = Math.ceil(state.filteredRecords.length / state.recordsPerPage);
+    if (state.currentPage < totalPages) { state.currentPage++; renderPagedTable(); }
+  }
+
+  // ─── Filtering ────────────────────────────────────────
+  function filterTable() {
+    var q = document.getElementById('searchBox').value.toLowerCase();
+    var nat = document.getElementById('filterNature').value;
+    var reg = document.getElementById('filterRegion').value;
+    var sta = document.getElementById('filterStatus').value;
+    var pro = document.getElementById('filterProgress').value;
+    var filtered = state.records.filter(function(r) {
+      var matchQ = !q || [r.projectName,r.client,r.dealingAddress,r.dealingPerson,r.leadForm,r.jv,r.srNo].some(function(f){ return String(f||'').toLowerCase().includes(q); });
+      var matchN = !nat || String(r.nature||'').trim() === nat;
+      var matchR = !reg || String(r.region||'').trim() === reg;
+      var matchS = !sta || String(r.progressStatus || r.technicalStatus || '').trim() === sta;
+      var matchP = !pro || String(r.progressStatus || '').trim() === pro;
+      return matchQ && matchN && matchR && matchS && matchP;
+    });
+    renderTable(filtered);
+  }
+
+  function clearFilters() {
+    document.getElementById('searchBox').value = '';
+    document.getElementById('filterNature').value = '';
+    document.getElementById('filterRegion').value = '';
+    document.getElementById('filterStatus').value = '';
+    document.getElementById('filterProgress').value = '';
+    state.currentPage = 1;
+    filterTable();
+  }
+
+  function exportRows(scope) {
+    return scope === 'all' ? (state.records || []) : (state.filteredRecords || []);
+  }
+
+  function exportColumns() {
+    return [
+      { label: 'Sr. No.', key: 'srNo' },
+      { label: 'Project Name', key: 'projectName' },
+      { label: 'Nature', key: 'nature' },
+      { label: 'Sector', key: 'sector' },
+      { label: 'Region', key: 'region' },
+      { label: 'Client / Employer', key: 'client' },
+      { label: 'Submission Date', key: 'submissionDate' },
+      { label: 'Progress Status', key: 'progressStatus' },
+      { label: 'Current Status', key: 'currentStatus' },
+      { label: 'Progress Tracking', key: 'progressTracking' }
+    ];
+  }
+
+  function escapeExportValue(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function downloadRecords(format, scope) {
+    var rows = exportRows(scope);
+    if (!rows.length) {
+      toast('There are no records to download.', 'error');
+      return;
+    }
+
+    var columns = exportColumns();
+    var title = scope === 'all' ? 'All Projects Record' : 'Filtered Project Records';
+    var tableHtml = '<table><thead><tr>' + columns.map(function(column) {
+      return '<th>' + escapeExportValue(column.label) + '</th>';
+    }).join('') + '</tr></thead><tbody>' + rows.map(function(row) {
+      return '<tr>' + columns.map(function(column) {
+        var value = column.key === 'progressStatus' ? (row.progressStatus || row.technicalStatus) : row[column.key];
+        return '<td>' + escapeExportValue(value || '-') + '</td>';
+      }).join('') + '</tr>';
+    }).join('') + '</tbody></table>';
+
+    if (format === 'excel') {
+      var excelDocument = '<html><head><meta charset="UTF-8"></head><body><h2>' + title + '</h2>' + tableHtml + '</body></html>';
+      var excelBlob = new Blob(['\ufeff' + excelDocument], { type: 'application/vnd.ms-excel;charset=utf-8' });
+      saveDownload(excelBlob, title.toLowerCase().replace(/ /g, '-') + '.xls');
+    } else {
+      var printWindow = window.open('', '_blank');
+      if (!printWindow) {
+        toast('Please allow pop-ups to create the PDF.', 'error');
+        return;
+      }
+      printWindow.document.write('<!doctype html><html><head><meta charset="UTF-8"><title>' + title + '</title><style>' +
+        'body{font-family:Arial,sans-serif;color:#0f172a;padding:24px}h2{font-size:20px;margin:0 0 16px}table{width:100%;border-collapse:collapse;font-size:11px}th{background:#e2e8f0;text-align:left;text-transform:uppercase}th,td{border:1px solid #cbd5e1;padding:7px;vertical-align:top}tr:nth-child(even){background:#f8fafc}@media print{body{padding:0}h2{margin-top:0}}' +
+        '</style></head><body><h2>' + title + '</h2>' + tableHtml + '<script>window.onload=function(){window.print();};<\/script></body></html>');
+      printWindow.document.close();
+    }
+
+    document.querySelector('.download-menu').removeAttribute('open');
+  }
+
+  function saveDownload(blob, filename) {
+    var link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(link.href);
+  }
+
+
+
+  // ─── Delete ───────────────────────────────────────────
+  function openDelete(srNo) {
+    deleteTarget = srNo;
+    document.getElementById('deleteModal').classList.add('active');
+    
+    // Yahan confirmDeleteBtn par event handler mein function call theek karein
+    document.getElementById('confirmDeleteBtn').onclick = function() {
+      confirmDelete(deleteTarget);
+    };
+  }
+
+  function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('active');
+    deleteTarget = null;
+  }
+
+  function confirmDelete(srNo) {
+    closeDeleteModal();
+    if (!srNo) {
+      toast('Error: Invalid Project Sr. No.', 'error');
+      return;
+    }
+    showLoading('Deleting record...');
+    google.script.run
+      .withSuccessHandler(function(msg) {
+        hideLoading(); 
+        toast(msg);
+        refreshAll();
+      })
+      .withFailureHandler(function(err) {
+        hideLoading(); 
+        toast('Delete failed: ' + err.message, 'error');
+      })
+      .deleteProject(srNo, state.authToken);
+  }
+</script>
+</body>
+</html>

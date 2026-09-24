@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    if (localStorage.getItem('bd_user_role') === 'admin' || localStorage.getItem('bd_login_user') === 'designmenislamabad@gmail.com') document.documentElement.classList.add('role-admin');
+  </script>
+  <title>Login - Designmen BD Portal</title>
+  <link rel="icon" type="image/jpeg" href="https://lh3.googleusercontent.com/d/1ZCTtF1EZVR419OA-1pMz4uf0T-DjpukU" sizes="64x64">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="preload" as="style">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--primary:#2563eb;--primary-dark:#1e40af;--slate-50:#f8fafc;--slate-200:#e2e8f0;--slate-500:#64748b;--slate-800:#1e293b;--slate-900:#0f172a;--danger:#dc2626}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#eff6ff 0%,#f8fafc 55%,#ecfeff 100%);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Outfit',sans-serif;color:var(--slate-900)}.login-card{width:min(420px,calc(100% - 2rem));padding:2.25rem;background:white;border:1px solid var(--slate-200);border-radius:16px;box-shadow:0 20px 45px rgba(15,23,42,.12)}.brand{text-align:center;margin-bottom:2rem}.brand img{width:64px;height:64px;object-fit:cover;margin-bottom:.75rem}.brand h1{margin:0;font-size:1.35rem;color:var(--primary-dark)}.brand p{margin:.3rem 0 0;color:var(--slate-500);font-size:.85rem}.field{display:grid;gap:.4rem;margin-bottom:1rem}.field label{font-size:.82rem;font-weight:600;color:var(--slate-800)}.password-wrap{position:relative}.field input{width:100%;padding:.75rem 2.8rem .75rem .85rem;border:1px solid var(--slate-200);border-radius:6px;font:400 .95rem 'Outfit',sans-serif;outline:none}.field input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.12)}.password-toggle{position:absolute;right:.45rem;top:50%;transform:translateY(-50%);width:2rem;padding:.25rem;background:transparent;color:var(--slate-500);font-size:1rem;cursor:pointer;border:0;font:inherit}.password-toggle:hover{color:var(--primary)}button{width:100%;padding:.75rem;border:0;border-radius:6px;background:var(--primary);color:white;font:600 .95rem 'Outfit',sans-serif;cursor:pointer;transition:background .2s}button:hover{background:var(--primary-dark)}button:disabled{opacity:.6;cursor:wait}.error{min-height:1.25rem;margin-top:.9rem;color:var(--danger);font-size:.82rem;text-align:center}.login-loading{position:fixed;inset:0;z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;background:rgba(15,23,42,.48);backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .2s}.login-loading.active{opacity:1;pointer-events:auto}.login-spinner{width:46px;height:46px;border:4px solid rgba(255,255,255,.45);border-top-color:white;border-radius:50%;animation:loginSpin .8s linear infinite}.login-loading p{margin:0;color:white;font-size:1rem;font-weight:600}@keyframes loginSpin{to{transform:rotate(360deg)}}
+    .brand img{width:64px;height:64px;padding:0;border:0;border-radius:0;background:transparent;object-fit:contain}
+    .field label{font-weight:700}
+  </style>
+</head>
+<body>
+  <div id="loginLoading" class="login-loading" aria-live="polite" aria-busy="true">
+    <div class="login-spinner"></div>
+    <p>Please wait...</p>
+  </div>
+  <main class="login-card">
+    <div class="brand"><img src="https://lh3.googleusercontent.com/d/1ZCTtF1EZVR419OA-1pMz4uf0T-DjpukU" alt="DESIGNMEN logo" loading="lazy"><h1>DESIGNMEN BD Portal</h1><p>Welcome back</p></div>
+
+    <form id="loginForm" style="display:block;">
+      <div class="field"><label for="loginEmail">Email</label><input id="loginEmail" type="email" autocomplete="username" required></div>
+      <div class="field"><label for="loginPassword">Password</label><div class="password-wrap"><input id="loginPassword" type="password" autocomplete="current-password" required><button class="password-toggle" id="passwordToggle" type="button" aria-label="Show password" title="Show password">👁</button></div></div>
+      <button id="loginButton" type="submit">Login</button><div id="errorMessage" class="error" role="alert" style="min-height:.35rem;margin-top:.25rem;"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-top:.25rem;">
+        <button id="showSignupTab" type="button" style="background:white;color:#1d4ed8;border:1px solid #93c5fd;">Sign Up</button>
+        <button id="forgotPasswordButton" type="button" style="background:#e0f2fe;color:#0f172a;border:1px solid #bae6fd;">Forgot password?</button>
+      </div>
+    </form>
+
+    <form id="resetForm" style="display:none;">
+      <div class="field"><label for="resetPassword">New password</label><div class="password-wrap"><input id="resetPassword" type="password" autocomplete="new-password" required><button class="password-toggle" id="resetPasswordToggle" type="button" aria-label="Show password" title="Show password">👁</button></div></div>
+      <div class="field"><label for="resetPasswordConfirm">Confirm new password</label><div class="password-wrap"><input id="resetPasswordConfirm" type="password" autocomplete="new-password" required><button class="password-toggle" id="resetPasswordConfirmToggle" type="button" aria-label="Show password" title="Show password">👁</button></div></div>
+      <button id="resetButton" type="submit">Set new password</button><div id="resetMessage" class="error" role="alert"></div>
+    </form>
+
+    <form id="signupForm" style="display:none;">
+      <div class="field"><label for="signupEmail">Email</label><input id="signupEmail" type="email" autocomplete="email" required></div>
+      <div class="field"><label for="signupRole">Role</label><select id="signupRole" style="width:100%;padding:.75rem;border:1px solid var(--slate-200);border-radius:6px;font:400 .95rem 'Outfit',sans-serif;">
+        <option value="employee">Employee</option>
+      </select></div>
+      <div class="field"><label for="signupPassword">Password</label><div class="password-wrap"><input id="signupPassword" type="password" autocomplete="new-password" required><button class="password-toggle" id="signupPasswordToggle" type="button" aria-label="Show password" title="Show password">👁</button></div></div>
+      <button id="signupButton" type="submit">Create Account</button><div id="signupMessage" class="error" role="alert" style="min-height:.35rem;margin-top:.25rem;"></div>
+      <button id="backToLoginButton" type="button" style="margin-top:.1rem;background:white;color:#1d4ed8;border:1px solid #93c5fd;">Back to Login</button>
+    </form>
+  </main>
+  <script>
+    const SUPABASE_URL = 'https://elymgmzexvrbxmlzoohf.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_hnTeB0bxmdQE5ugTBKuPCQ_DXL38Zqx';
+    const PASSWORD_RESET_REDIRECT_URL = 'https://designmenislamabad-eng.github.io/BD-Dashboard/ResetPassword.html';
+    let recoveryAccessToken = '';
+
+    function setAuthMode(mode) {
+      const loginForm = document.getElementById('loginForm');
+      const signupForm = document.getElementById('signupForm');
+      const isLogin = mode === 'login';
+      loginForm.style.display = isLogin ? 'block' : 'none';
+      signupForm.style.display = isLogin ? 'none' : 'block';
+    }
+
+    function togglePasswordVisibility(button, input) {
+      const visible = input.type === 'text';
+      input.type = visible ? 'password' : 'text';
+      button.setAttribute('aria-label', visible ? 'Show password' : 'Hide password');
+      button.setAttribute('title', visible ? 'Show password' : 'Hide password');
+    }
+
+    function showLoadingState(button, label, enabled) {
+      button.disabled = !enabled;
+      button.textContent = label;
+    }
+
+      function getPasswordResetRedirectUrl() {
+        return PASSWORD_RESET_REDIRECT_URL;
+      }
+
+    function handleAuthRedirect() {
+      const hash = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+      const query = new URLSearchParams(window.location.search);
+      const authType = hash.get('type') || query.get('type');
+      recoveryAccessToken = hash.get('access_token') || '';
+      const errorDescription = hash.get('error_description') || query.get('error_description');
+      const error = document.getElementById('errorMessage');
+      const resetForm = document.getElementById('resetForm');
+      const loginForm = document.getElementById('loginForm');
+
+      if (errorDescription) {
+        error.textContent = decodeURIComponent(errorDescription.replace(/\+/g, ' '));
+        return;
+      }
+
+      if (authType === 'recovery' && recoveryAccessToken) {
+        loginForm.style.display = 'none';
+        resetForm.style.display = 'block';
+        error.style.color = '#0f766e';
+        error.textContent = 'Email verified. Enter your new password below.';
+        return;
+      }
+
+      if (authType === 'signup') {
+        error.style.color = '#0f766e';
+        error.textContent = 'Email verified successfully. You can now log in.';
+        window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+      }
+    }
+
+    function handleForgotPassword() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const error = document.getElementById('errorMessage');
+
+      if (!email) {
+        error.textContent = 'Pehle Email field mein apni email likhein.';
+        document.getElementById('loginEmail').focus();
+        return;
+      }
+
+      const forgotButton = document.getElementById('forgotPasswordButton');
+      if (forgotButton) {
+        forgotButton.disabled = true;
+        forgotButton.textContent = 'Sending...';
+      }
+      error.textContent = '';
+
+      const redirectUrl = getPasswordResetRedirectUrl();
+      fetch(SUPABASE_URL + '/auth/v1/recover?redirect_to=' + encodeURIComponent(redirectUrl), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+        },
+          body: JSON.stringify({ email: email })
+      }).then(function(response) {
+        if (!response.ok) return response.json().then(function(result) {
+          const details = result.error_description || result.msg || result.message || '';
+          if (response.status === 429 || /rate limit|too many|exceeded/i.test(details)) {
+            throw new Error('Email rate limit exceeded. Thori dair wait karke dobara try karein.');
+          }
+          throw new Error(details || 'Unable to send password reset email.');
+        });
+        return response.text();
+      }).then(function() {
+        error.style.color = '#0f766e';
+        error.textContent = 'Password reset email sent. Please check your inbox.';
+      }).catch(function(err) {
+        error.style.color = '#dc2626';
+        error.textContent = err.message || 'Unable to send reset email.';
+      }).finally(function() {
+        if (forgotButton) {
+          forgotButton.disabled = false;
+          forgotButton.textContent = 'Forgot password?';
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const passwordToggle = document.getElementById('passwordToggle');
+      const password = document.getElementById('loginPassword');
+      const signupPasswordToggle = document.getElementById('signupPasswordToggle');
+      const signupPassword = document.getElementById('signupPassword');
+      const resetPasswordToggle = document.getElementById('resetPasswordToggle');
+      const resetPassword = document.getElementById('resetPassword');
+      const resetPasswordConfirmToggle = document.getElementById('resetPasswordConfirmToggle');
+      const resetPasswordConfirm = document.getElementById('resetPasswordConfirm');
+
+      if (passwordToggle) passwordToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        togglePasswordVisibility(this, password);
+      });
+
+      if (signupPasswordToggle) signupPasswordToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        togglePasswordVisibility(this, signupPassword);
+      });
+
+      if (resetPasswordToggle) resetPasswordToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        togglePasswordVisibility(this, resetPassword);
+      });
+
+      if (resetPasswordConfirmToggle) resetPasswordConfirmToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        togglePasswordVisibility(this, resetPasswordConfirm);
+      });
+
+      document.getElementById('showSignupTab').addEventListener('click', function() { setAuthMode('signup'); });
+      document.getElementById('backToLoginButton').addEventListener('click', function() { setAuthMode('login'); });
+
+      const forgotPasswordButton = document.getElementById('forgotPasswordButton');
+      if (forgotPasswordButton) {
+        forgotPasswordButton.addEventListener('click', function() {
+          const email = document.getElementById('loginEmail').value.trim();
+          const target = email ? 'ResetPassword.html?email=' + encodeURIComponent(email) : 'ResetPassword.html';
+          window.location.href = target;
+        });
+      }
+
+      const resetForm = document.getElementById('resetForm');
+      if (resetForm) {
+        resetForm.addEventListener('submit', function(event) {
+          event.preventDefault();
+          const button = document.getElementById('resetButton');
+          const message = document.getElementById('resetMessage');
+          const newPassword = document.getElementById('resetPassword').value;
+          const confirmPassword = document.getElementById('resetPasswordConfirm').value;
+
+          if (!recoveryAccessToken) {
+            message.textContent = 'Reset link expired. Please request a new reset email.';
+            return;
+          }
+          if (newPassword.length < 6) {
+            message.textContent = 'Password must be at least 6 characters.';
+            return;
+          }
+          if (newPassword !== confirmPassword) {
+            message.textContent = 'Passwords do not match.';
+            return;
+          }
+
+          showLoadingState(button, 'Updating password...', false);
+          message.textContent = '';
+          fetch(SUPABASE_URL + '/auth/v1/user', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': SUPABASE_ANON_KEY,
+              'Authorization': 'Bearer ' + recoveryAccessToken
+            },
+            body: JSON.stringify({ password: newPassword })
+          }).then(function(response) {
+            if (!response.ok) return response.json().then(function(result) {
+              throw new Error(result.error_description || result.msg || 'Unable to update password.');
+            });
+            return response.json();
+          }).then(function() {
+            message.style.color = '#0f766e';
+            message.textContent = 'Password updated successfully. You can now log in.';
+            recoveryAccessToken = '';
+            window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+            setTimeout(function() {
+              resetForm.style.display = 'none';
+              document.getElementById('loginForm').style.display = 'block';
+              document.getElementById('loginEmail').focus();
+            }, 1200);
+          }).catch(function(err) {
+            message.style.color = '#dc2626';
+            message.textContent = err.message || 'Unable to update password.';
+            showLoadingState(button, 'Set new password', true);
+          });
+        });
+      }
+
+      const loginForm = document.getElementById('loginForm');
+      if (loginForm) {
+        loginForm.addEventListener('submit', function(event) {
+          event.preventDefault();
+          const button = document.getElementById('loginButton');
+          const error = document.getElementById('errorMessage');
+          const loading = document.getElementById('loginLoading');
+          const email = document.getElementById('loginEmail').value.trim();
+          const enteredPassword = document.getElementById('loginPassword').value;
+
+          showLoadingState(button, 'Logging in...', false);
+          error.textContent = '';
+          if (loading) loading.classList.add('active');
+
+          if (typeof google === 'undefined' || !google.script || !google.script.run) {
+            fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+              },
+              body: JSON.stringify({ email: email, password: enteredPassword })
+            }).then(function(response) {
+              if (!response.ok) return response.json().then(function(result) { throw new Error(result.error_description || result.msg || 'Invalid email or password.'); });
+              return response.json();
+            }).then(function(session) {
+              if (!session.access_token) throw new Error('Supabase login did not return a valid session.');
+              localStorage.setItem('bd_login_user', email);
+              localStorage.setItem('bd_user_role', email.toLowerCase() === 'designmenislamabad@gmail.com' ? 'admin' : 'employee');
+              localStorage.setItem('bd_access_token', session.access_token);
+              if (session.refresh_token) localStorage.setItem('bd_refresh_token', session.refresh_token);
+              window.location.href = 'Dashboard.html';
+            }).catch(function(err) {
+              error.textContent = err.message || 'Login failed.';
+              showLoadingState(button, 'Login', true);
+              if (loading) loading.classList.remove('active');
+            });
+            return;
+          }
+
+          google.script.run
+            .withSuccessHandler(function(session) {
+              google.script.run
+                .withSuccessHandler(function(webAppUrl) {
+                  localStorage.setItem('bd_login_user', session.userId || email);
+                  localStorage.setItem('bd_user_role', session.role === 'admin' ? 'admin' : 'employee');
+                  window.top.location.href = webAppUrl + '?page=dashboard&token=' + encodeURIComponent(session.token);
+                })
+                .withFailureHandler(function(err) {
+                  error.textContent = err.message || 'Could not open the dashboard.';
+                  showLoadingState(button, 'Login', true);
+                  if (loading) loading.classList.remove('active');
+                })
+                .getWebAppUrl();
+            })
+            .withFailureHandler(function(err) {
+              error.textContent = err.message || 'Invalid email or password.';
+              showLoadingState(button, 'Login', true);
+              if (loading) loading.classList.remove('active');
+            })
+            .authenticateUser(email, enteredPassword);
+        });
+      }
+
+      const signupForm = document.getElementById('signupForm');
+      if (signupForm) {
+        signupForm.addEventListener('submit', function(event) {
+          event.preventDefault();
+          const button = document.getElementById('signupButton');
+          const message = document.getElementById('signupMessage');
+          const email = document.getElementById('signupEmail').value.trim();
+          const role = document.getElementById('signupRole').value;
+          const enteredPassword = document.getElementById('signupPassword').value;
+
+          showLoadingState(button, 'Creating account...', false);
+          message.textContent = '';
+
+          if (typeof google === 'undefined' || !google.script || !google.script.run) {
+            const redirectUrl = window.location.href.split('#')[0];
+            fetch(SUPABASE_URL + '/auth/v1/signup?redirect_to=' + encodeURIComponent(redirectUrl), {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'apikey': SUPABASE_ANON_KEY,
+                'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+              },
+              body: JSON.stringify({
+                email: email,
+                password: enteredPassword,
+                data: { role: 'employee' }
+              })
+            }).then(function(response) {
+              if (!response.ok) return response.json().then(function(result) {
+                const apiMessage = result.error_description || result.msg || 'Signup failed.';
+                if (/rate limit/i.test(apiMessage)) {
+                  throw new Error('Supabase email limit reached. Please wait before trying again, or create this user from Supabase Authentication > Users with Auto Confirm enabled.');
+                }
+                throw new Error(apiMessage);
+              });
+              return response.json();
+            }).then(function() {
+              message.textContent = 'Account created. Please verify your email before login.';
+              setAuthMode('login');
+              document.getElementById('loginEmail').value = email;
+            }).catch(function(err) {
+              message.textContent = err.message || 'Signup failed.';
+              showLoadingState(button, 'Create Account', true);
+            });
+            return;
+          }
+
+          google.script.run
+            .withSuccessHandler(function(result) {
+              message.textContent = result.message || 'Account created successfully.';
+              showLoadingState(button, 'Create Account', true);
+              setAuthMode('login');
+              document.getElementById('loginEmail').value = email;
+            })
+            .withFailureHandler(function(err) {
+              message.textContent = err.message || 'Signup failed.';
+              showLoadingState(button, 'Create Account', true);
+            })
+            .signupUser(email, enteredPassword, role);
+        });
+      }
+
+      setAuthMode('login');
+      handleAuthRedirect();
+    });
+  </script>
+</body>
+</html>

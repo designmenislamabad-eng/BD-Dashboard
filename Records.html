@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    if (localStorage.getItem('bd_user_role') === 'admin' || localStorage.getItem('bd_login_user') === 'designmenislamabad@gmail.com') document.documentElement.classList.add('role-admin');
+  </script>
+  <title>All Projects Record - Designmen</title>
+  <link rel="icon" type="image/jpeg" href="https://lh3.googleusercontent.com/d/1ZCTtF1EZVR419OA-1pMz4uf0T-DjpukU" sizes="64x64">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--primary:#2563eb;--primary-hover:#1d4ed8;--primary-light:#eff6ff;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;--slate-50:#f8fafc;--slate-100:#f1f5f9;--slate-200:#e2e8f0;--slate-300:#cbd5e1;--slate-500:#64748b;--slate-700:#334155;--slate-800:#1e293b;--slate-900:#0f172a;--font-main:'Outfit',sans-serif;--shadow-sm:0 1px 2px rgba(0,0,0,.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);--radius-sm:6px;--radius-md:12px;--radius-lg:16px}
+    *{box-sizing:border-box;margin:0;padding:0}body{font-family:var(--font-main);background:var(--slate-50);color:var(--slate-900);line-height:1.5;overflow-x:hidden}.app-layout{display:flex;min-height:100vh}.sidebar{width:280px;background:var(--slate-900);color:white;padding:2rem 1.5rem;display:flex;flex-direction:column;position:fixed;height:100vh;z-index:100;transition:transform .25s}.brand-section{display:flex;align-items:center;gap:.75rem;margin-bottom:3rem}.brand-logo{width:40px;height:40px;object-fit:cover}.brand-info h1{font-size:1.15rem;font-weight:700;line-height:1.2}.brand-info span{font-size:.75rem;color:var(--slate-300);text-transform:uppercase;letter-spacing:1px}.nav-list{list-style:none;display:flex;flex-direction:column;gap:.5rem}.nav-item button{width:100%;display:flex;align-items:center;gap:1rem;background:none;border:0;color:var(--slate-300);padding:.85rem 1rem;font:500 .95rem var(--font-main);border-radius:var(--radius-md);cursor:pointer;text-align:left}.nav-item button:hover{background:rgba(255,255,255,.05);color:white}.nav-item.active button{background:var(--primary);color:white;box-shadow:0 4px 12px rgba(37,99,235,.25)}.nav-item svg{width:20px;height:20px;fill:currentColor;flex-shrink:0}.sidebar-footer{margin-top:auto;padding-top:1rem;border-top:1px solid rgba(255,255,255,.1);font-size:.75rem;color:var(--slate-300)}.main-content{flex:1;margin-left:280px;padding:2.5rem;min-width:0}.top-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;padding-bottom:1.25rem;border-bottom:1px solid var(--slate-200)}.page-title h2{font-size:1.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:#1e40af}.page-title p{font-size:.9rem;color:#0f766e;font-weight:500}.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;font:600 .875rem var(--font-main);padding:.6rem 1.15rem;border-radius:var(--radius-sm);border:1px solid transparent;cursor:pointer}.btn-secondary{background:white;border-color:var(--slate-200);color:var(--slate-700)}.btn-primary{background:var(--primary);color:white}.btn-danger{background:var(--danger);color:white}.btn-sm{padding:.3rem .65rem;font-size:.775rem}.filter-bar{background:white;border:1px solid var(--slate-200);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1.25rem;box-shadow:var(--shadow-sm);display:flex;flex-wrap:wrap;gap:.75rem;align-items:center}.search-wrapper{flex:1;min-width:220px}.search-wrapper input,.filter-select{font-family:var(--font-main);font-size:.875rem;padding:.6rem .8rem;border:1px solid var(--slate-200);border-radius:var(--radius-sm);outline:none;background:white;width:100%}.filter-group{display:flex;align-items:center;gap:.4rem}.filter-group label{font-size:.78rem;font-weight:600;color:var(--slate-700);white-space:nowrap}.filter-select{width:auto;padding:.45rem .75rem;font-size:.82rem}.table-card{background:white;border:1px solid var(--slate-200);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow:hidden}.table-header-row{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 1.5rem;border-bottom:1px solid var(--slate-200)}.table-header-title{font-size:1.05rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:#1e40af}.download-menu{position:relative}.download-menu summary{list-style:none;cursor:pointer}.download-menu summary::-webkit-details-marker{display:none}.download-options{position:absolute;right:0;top:calc(100% + .4rem);z-index:20;min-width:200px;padding:.35rem;background:white;border:1px solid var(--slate-200);border-radius:var(--radius-md);box-shadow:var(--shadow-lg)}.download-options button{display:block;width:100%;padding:.6rem .75rem;border:0;border-radius:var(--radius-sm);background:white;color:var(--slate-800);font:400 .8rem var(--font-main);text-align:left;cursor:pointer}.download-options button:hover{background:var(--primary-light);color:var(--primary)}.download-divider{height:1px;margin:.25rem 0;background:var(--slate-200)}.table-container{width:100%;overflow-x:auto}table{width:100%;min-width:1450px;border-collapse:collapse;table-layout:fixed;text-align:left;font-size:.875rem}th{background:var(--slate-100);color:var(--slate-700);font-weight:600;padding:.85rem 1rem;text-transform:uppercase;font-size:.7rem;letter-spacing:.5px;border-bottom:1px solid var(--slate-200);white-space:nowrap}td{padding:.85rem 1rem;border-bottom:1px solid var(--slate-100);color:var(--slate-700);max-width:220px;white-space:normal;overflow-wrap:anywhere;vertical-align:middle}th:nth-child(1),td:nth-child(1){width:55px}th:nth-child(2),td:nth-child(2){width:270px}th:nth-child(3),td:nth-child(3){width:120px}th:nth-child(4),td:nth-child(4){width:240px}th:nth-child(5),td:nth-child(5){width:180px}th:nth-child(6),td:nth-child(6){width:220px}th:nth-child(7),td:nth-child(7){width:150px;white-space:nowrap}th:nth-child(8),td:nth-child(8){width:150px;white-space:nowrap}th:nth-child(9),td:nth-child(9){width:140px;white-space:nowrap}th:nth-child(10),td:nth-child(10){width:175px;white-space:nowrap}td.project-name{min-width:0;max-width:none;font-weight:600;color:var(--slate-900)}tr:last-child td{border-bottom:0}tr:hover td{background:var(--slate-50)}.badge{display:inline-flex;align-items:center;padding:.2rem .6rem;font-size:.72rem;font-weight:600;border-radius:9999px;background:var(--slate-100);color:var(--slate-700)}.badge-success{background:#ecfdf5;color:#059669}.badge-warning{background:#fffbeb;color:#d97706}.badge-danger{background:#fef2f2;color:#dc2626}.pagination-bar{display:flex;justify-content:center;align-items:center;gap:.75rem;padding:1.25rem;background:var(--slate-50);border-top:1px solid var(--slate-200);font-size:.875rem;color:var(--slate-700);flex-wrap:wrap}.pagination-bar button{font:400 .85rem var(--font-main);padding:.45rem .9rem;border:1px solid var(--slate-200);background:white;border-radius:var(--radius-sm);cursor:pointer}.pagination-bar button:disabled{opacity:.5;cursor:not-allowed}.loading{text-align:center;padding:3rem;color:var(--slate-300)}.toast-container{position:fixed;bottom:24px;right:24px;z-index:2000}.toast{background:var(--slate-900);color:white;padding:.9rem 1.4rem;border-radius:var(--radius-md);box-shadow:var(--shadow-lg);font-size:.875rem;border-left:4px solid var(--primary);margin-top:.5rem}.toast.error{border-left-color:var(--danger)}.menu-toggle{display:none;background:none;border:0;color:var(--slate-900);cursor:pointer}
+    .nav-item:nth-child(2),.employee th:last-child,.employee td:last-child{display:none}
+    .admin-ready .nav-item:nth-child(2){display:list-item}
+    .role-admin .nav-item:nth-child(2){display:list-item !important}
+    .table-container{overflow-x:auto;width:100%;}
+    .table-container table{min-width:1200px;}
+    .table-container th,.table-container td{vertical-align:middle;}
+    .table-container .badge{display:inline-block;max-width:100%;white-space:normal;overflow-wrap:anywhere;line-height:1.25;}
+    .table-container td:last-child{padding-left:1rem;padding-right:1rem;}
+    @media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.main-content{margin-left:0;padding:1.25rem}.menu-toggle{display:block}.top-header{gap:1rem}.page-title h2{font-size:1.35rem}.filter-group{width:100%}.filter-select{flex:1}.table-header-row{padding:1rem}.table-header-title{font-size:.9rem}}
+    .brand-logo{width:40px;height:40px;padding:0;border:0;border-radius:0;background:transparent;display:block;object-fit:contain}
+  </style>
+</head>
+<body class="auth-pending">
+  <div class="app-layout">
+    <aside id="sidebar" class="sidebar">
+      <div class="brand-section"><img class="brand-logo" src="https://lh3.googleusercontent.com/d/1ZCTtF1EZVR419OA-1pMz4uf0T-DjpukU" alt="DESIGNMEN logo"><div class="brand-info"><h1>DESIGNMEN</h1><span>BD Portal</span></div></div>
+      <nav><ul class="nav-list"><li class="nav-item"><button onclick="goToDashboard()"><svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>Dashboard Overview</button></li><li class="nav-item"><button onclick="goToForm()"><svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>Project Entry Form</button></li><li class="nav-item active"><button onclick="goToRecords()"><svg viewBox="0 0 24 24"><path d="M4 4h16v2H4V4zm0 5h16v2H4V9zm0 5h16v2H4v-2zm0 5h10v2H4v-2z"/></svg>All Projects Record</button></li></ul></nav>
+      <div class="sidebar-footer"><button class="btn btn-danger btn-sm" onclick="logoutUser()" style="width:100%;margin-bottom:1rem;">Logout</button><p><strong>Designmen Consulting</strong></p><p>Engineers (Pvt) Ltd.</p><p>BD Dashboard v2.1</p></div>
+    </aside>
+    <main class="main-content">
+      <header class="top-header"><button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">Menu</button><div class="page-title"><h2>All Projects Record</h2><p>Search, filter, download, edit and manage project records.</p></div></header>
+      <div class="filter-bar"><div class="search-wrapper"><input id="searchBox" type="text" placeholder="Search project, client, dealer..." oninput="renderTable()"></div><div class="filter-group"><label>Nature:</label><select id="filterNature" class="filter-select" onchange="renderTable()"><option value="">All</option><option>RFP</option><option>EOI</option><option>PQD</option><option>Enlistment/Portal</option><option>QTN</option><option>RFQ</option><option>EPC</option><option>Others</option></select></div><div class="filter-group"><label>Region:</label><select id="filterRegion" class="filter-select" onchange="renderTable()"><option value="">All</option><option>Federal</option><option>Punjab</option><option>KPK</option><option>Sindh</option><option>Baluchistan</option><option>GB</option><option>AJ&amp;K</option><option>International</option></select></div><div class="filter-group"><label>Current Status:</label><select id="filterStatus" class="filter-select" onchange="renderTable()"><option value="">— Select —</option><option>Technical Qualified</option><option>Technical Disqualified</option><option>Prequalified</option><option>Not Prequalified</option><option>Client Not Responded</option><option>Pending/Under Evaluation</option><option>Not Applied</option><option>Cancelled</option></select></div><div class="filter-group"><label>Final Status:</label><select id="filterProgress" class="filter-select" onchange="renderTable()"><option value="">— Select —</option><option>Awarded</option><option>Not Awarded</option><option>Not Applied</option><option>Granted</option><option>Not Granted</option><option>Prequalified</option><option>Not Prequalified</option><option>Client Not Responded</option><option>Pending/Under Evaluation</option><option>Cancelled</option></select></div><button class="btn btn-secondary btn-sm" onclick="clearFilters()">Clear</button><details class="download-menu"><summary class="btn btn-secondary btn-sm">Download &#9662;</summary><div class="download-options"><button onclick="downloadRecords('excel')">Download Excel</button><button onclick="downloadRecords('pdf')">Download PDF</button></div></details></div>
+      <div class="table-card"><div class="table-container"><table><thead><tr><th>#</th><th>Project Name</th><th>Nature</th><th>Client</th><th>Lead Form</th><th>Associated / JVs</th><th>Submission Date</th><th>Current Status</th><th>Final Status</th><th>Actions</th></tr></thead><tbody id="recordsBody"><tr><td colspan="10" class="loading">Loading records...</td></tr></tbody></table></div><div id="paginationBar" class="pagination-bar" style="display:none"><button id="prevBtn" onclick="changePage(-1)">Previous</button><div id="pageJumpWrap" class="page-jump"><span id="pageInfo" ondblclick="showPageJumpInput()">Page 1 of 1</span><input id="pageJumpInput" type="number" min="1" max="1" value="1" onkeydown="if(event.key==='Enter'){jumpToPage();}" onblur="hidePageJumpInput();" aria-label="Jump to page number"></div><button id="nextBtn" onclick="changePage(1)">Next</button></div></div>
+    </main>
+  </div>
+  <div id="toastContainer" class="toast-container"></div>
+  <script>
+    var records = [], staticRecords = [], currentPage = 1, recordsPerPage = 25, webAppUrl = null, authToken = '', userRole = '', totalRecords = 0, totalPages = 0, isLoadingMore = false, lastFilterSignature = '', filterSearchTimer = null;
+    var roleVisibilityTimer = setInterval(function(){if(userRole === 'admin'){document.body.classList.add('admin-ready');document.documentElement.classList.add('role-admin');clearInterval(roleVisibilityTimer);}},50);
+    document.addEventListener('DOMContentLoaded', function(){if(typeof google==='undefined'||!google.script||!google.script.run){var staticToken=localStorage.getItem('bd_access_token');if(!staticToken){window.location.replace('Login.html');return}fetch('https://elymgmzexvrbxmlzoohf.supabase.co/auth/v1/user',{headers:{apikey:'sb_publishable_hnTeB0bxmdQE5ugTBKuPCQ_DXL38Zqx',Authorization:'Bearer '+staticToken}}).then(function(response){if(!response.ok)throw new Error('Session expired');return response.json()}).then(function(user){userRole=String(user.email||'').trim().toLowerCase()==='designmenislamabad@gmail.com'?'admin':'employee';document.body.classList.remove('auth-pending');if(userRole!=='admin')document.body.classList.add('employee');loadStaticRecordsPage(1)}).catch(function(){localStorage.removeItem('bd_access_token');localStorage.removeItem('bd_refresh_token');window.location.replace('Login.html')});return}google.script.url.getLocation(function(location){authToken=location&&location.parameter?location.parameter.token:'';google.script.run.withSuccessHandler(function(user){userRole=user.role;document.body.classList.remove('auth-pending');if(userRole!=='admin')document.body.classList.add('employee');loadRecordsPage(1)}).getSessionUser(authToken)})});
+    function getUrl(callback){if(webAppUrl){callback(webAppUrl);return}if(typeof google==='undefined'||!google.script||!google.script.run){callback('');return}google.script.run.withSuccessHandler(function(url){webAppUrl=url;callback(url)}).withFailureHandler(function(){callback(window.location.href.split('?')[0])}).getWebAppUrl()}
+    function goToDashboard(){if(typeof google==='undefined'||!google.script||!google.script.run){window.location.href='Dashboard.html';return}getUrl(function(url){window.top.location.href=url+'?page=dashboard&token='+encodeURIComponent(authToken)})}
+    function goToForm(srNo){if(userRole!=='admin')return;var editParam = srNo && String(srNo).trim() !== '' && String(srNo).trim() !== '0' ? '&edit=' + encodeURIComponent(String(srNo)) : '';if(typeof google==='undefined'||!google.script||!google.script.run){window.location.href='index.html?form=1'+(editParam?'&'+editParam.slice(1):'');return}getUrl(function(url){window.top.location.href=url+'?page=form&token='+encodeURIComponent(authToken)+editParam})}
+    function goToRecords(){window.scrollTo({top:0,behavior:'smooth'})}
+    function logoutUser(){localStorage.removeItem('bd_login_user');localStorage.removeItem('bd_user_role');localStorage.removeItem('bd_access_token');localStorage.removeItem('bd_refresh_token');if(typeof google==='undefined'||!google.script||!google.script.run){window.location.href='Login.html';return}google.script.run.withSuccessHandler(function(){getUrl(function(url){window.top.location.href=url+'?page=login'})}).logoutUser(authToken)}
+    function showToast(message,type){var toast=document.createElement('div');toast.className='toast '+(type||'');toast.textContent=message;document.getElementById('toastContainer').appendChild(toast);setTimeout(function(){toast.remove()},3500)}
+    
+    /* OPTIMIZED: Load records page-by-page from server */
+    function loadRecordsPage(page){
+      if(typeof google==='undefined'||!google.script||!google.script.run){loadStaticRecordsPage(page);return}
+      if(isLoadingMore)return;
+      isLoadingMore=true;
+      var requestFilters=getRecordFilters();
+      var btn=document.getElementById('syncBtn');
+      if(btn)btn.textContent='Syncing...';
+      
+      google.script.run
+        .withSuccessHandler(function(data){
+          totalRecords=data.totalRecords;
+          totalPages=data.totalPages;
+          records=data.records;
+          currentPage=data.currentPage;
+          isLoadingMore=false;
+          if(btn)btn.textContent='Sync Sheet';
+          lastFilterSignature = JSON.stringify(requestFilters);
+          renderTable();
+        })
+        .withFailureHandler(function(error){
+          isLoadingMore=false;
+          if(btn)btn.textContent='Sync Sheet';
+          document.getElementById('recordsBody').innerHTML='<tr><td colspan="10" class="loading">Error: '+escapeHtml(error.message)+'</td></tr>';
+        })
+        .getRecordsPaginated(authToken, page, recordsPerPage, false, requestFilters);
+    }
+
+    function loadStaticRecordsPage(page){
+      if(isLoadingMore)return;
+      isLoadingMore=true;
+      var btn=document.getElementById('syncBtn');
+      if(btn)btn.textContent='Syncing...';
+      var requestFilters=getRecordFilters();
+      var cachedRows = null;
+      try { cachedRows = JSON.parse(localStorage.getItem('bd_records_cache') || 'null'); } catch (e) { cachedRows = null; }
+      if (Array.isArray(cachedRows)) {
+        renderStaticRows(cachedRows, page, requestFilters);
+        isLoadingMore = false;
+      }
+      var endpoint='https://elymgmzexvrbxmlzoohf.supabase.co/rest/v1/Project_Entries_Detailed?select=*&order=sr_no.asc';
+      var staticAccessToken=localStorage.getItem('bd_access_token')||'sb_publishable_hnTeB0bxmdQE5ugTBKuPCQ_DXL38Zqx';
+      fetch(endpoint,{headers:{apikey:'sb_publishable_hnTeB0bxmdQE5ugTBKuPCQ_DXL38Zqx',Authorization:'Bearer '+staticAccessToken}})
+        .then(function(response){if(!response.ok)throw new Error('Supabase records request failed ('+response.status+').');return response.json()})
+        .then(function(rows){
+          localStorage.setItem('bd_records_cache', JSON.stringify(rows));
+          renderStaticRows(rows, page, requestFilters);
+        })
+        .catch(function(error){isLoadingMore=false;if(btn)btn.textContent='Sync Sheet';document.getElementById('recordsBody').innerHTML='<tr><td colspan="10" class="loading">Error: '+escapeHtml(error.message)+'</td></tr>'});
+    }
+
+    function renderStaticRows(rows, page, requestFilters){
+          isLoadingMore=false;
+          staticRecords=rows.map(function(row){return{srNo:row.sr_no,projectName:row.project_name,nature:row.nature,sector:row.sector,region:row.region,leadForm:row.lead_form,jv:row.associated_jvs,client:row.client_employer,clientAddress:row.client_address,contact:row.contact,dealingAddress:row.dealing_person,advertisingDate:row.advertising_date,submissionDate:row.submission_date,technicalOpening:row.technical_opening,financialOpening:row.financial_opening,progressStatus:row.project_progress,currentStatus:row.current_status,bidSecurity:row.bid_security,quotedFinancialAmount:row.quoted_financial_amount,financialBidRanking:row.financial_bid_ranking,finalStatus:row.final_status,awardedGrantedDate:row.awarded_granted_date,participantDetail:row.participants_detail,progressTracking:row.progress_tracking,remarks:row.remarks}});
+          var filtered=staticRecords.filter(function(record){return (!requestFilters.query||Object.keys(record).some(function(key){return String(record[key]||'').toLowerCase().indexOf(requestFilters.query.toLowerCase())!==-1}))&&(!requestFilters.nature||record.nature===requestFilters.nature)&&(!requestFilters.region||record.region===requestFilters.region)&&(!requestFilters.currentStatus||record.currentStatus===requestFilters.currentStatus)&&(!requestFilters.finalStatus||record.finalStatus===requestFilters.finalStatus)});
+              totalRecords=filtered.length;totalPages=Math.max(1,Math.ceil(totalRecords/recordsPerPage));currentPage=Math.max(1,Math.min(Number(page)||1,totalPages));records=filtered.slice((currentPage-1)*recordsPerPage,currentPage*recordsPerPage);lastFilterSignature=JSON.stringify(requestFilters);isLoadingMore=false;renderTable();
+            }
+    
+    function escapeHtml(value){return String(value==null?'':value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')}
+      function getRecordFilters(){return{query:document.getElementById('searchBox').value,nature:document.getElementById('filterNature').value,region:document.getElementById('filterRegion').value,currentStatus:document.getElementById('filterStatus').value,finalStatus:document.getElementById('filterProgress').value}}
+      function scheduleRecordsSearch(){renderTable()}
+      function reloadFilteredRecords(){renderTable()}
+      function filteredRows(){return records}
+    function badgeClass(value){var status=String(value||'').trim().toLowerCase();if(status==='qualified'||status==='awarded'||status==='granted'||status==='submitted')return'badge-success';if(status==='pending'||status==='working')return'badge-warning';if(status.indexOf('disqualified')!==-1||status.indexOf('not qualified')!==-1||status==='cancelled'||status==='not awarded')return'badge-danger';return''}
+    function renderTable(){
+      var filterSignature=JSON.stringify(getRecordFilters());
+      if(filterSignature!==lastFilterSignature){
+        clearTimeout(filterSearchTimer);
+        filterSearchTimer=setTimeout(function(){
+          currentPage=1;
+          loadRecordsPage(1);
+        },250);
+        return;
+      }
+      var rows=filteredRows();
+      var pageCount=Math.max(1, Number(totalPages) || 1);
+      currentPage=Math.min(currentPage, pageCount);
+      var body=document.getElementById('recordsBody');
+      if(!rows.length){body.innerHTML='<tr><td colspan="10" class="loading">No records found.</td></tr>';}else{body.innerHTML=rows.map(function(record){var current=record.currentStatus||record.financialStatus||'Pending',finalStatus=record.finalStatus||'Pending';return'<tr><td>'+escapeHtml(record.srNo||'')+'</td><td class="project-name">'+escapeHtml(record.projectName||'-')+'</td><td><span class="badge">'+escapeHtml(record.nature||'-')+'</span></td><td>'+escapeHtml(record.client||'-')+'</td><td>'+escapeHtml(record.leadForm||'-')+'</td><td>'+escapeHtml(record.jv||'-')+'</td><td>'+escapeHtml(record.submissionDate||'-')+'</td><td><span class="badge '+badgeClass(current)+'">'+escapeHtml(current)+'</span></td><td><span class="badge '+badgeClass(finalStatus)+'">'+escapeHtml(finalStatus)+'</span></td><td style="white-space:nowrap"><button class="btn btn-secondary btn-sm" onclick="goToForm('+Number(record.srNo||0)+')">Edit</button> <button class="btn btn-danger btn-sm" onclick="deleteRecord('+Number(record.srNo||0)+')">Delete</button></td></tr>'}).join('')}
+      var pagination=document.getElementById('paginationBar');
+      pagination.style.display=pageCount>1?'flex':'none';
+      var pageInfo=document.getElementById('pageInfo');
+      var pageInput=document.getElementById('pageJumpInput');
+      var pageJumpWrap=document.getElementById('pageJumpWrap');
+      pageInfo.textContent='Page '+currentPage+' of '+pageCount+' ('+totalRecords+' total records)';
+      pageInput.value=currentPage;
+      pageInput.max=pageCount;
+      pageInput.min=1;
+      pageJumpWrap.classList.remove('editing');
+      pageInput.style.display='none';
+      pageInfo.style.display='inline';
+      document.getElementById('prevBtn').disabled=currentPage===1;
+      document.getElementById('nextBtn').disabled=currentPage===pageCount;
+    }
+    
+    function changePage(direction){var newPage=currentPage+direction;if(newPage>=1&&newPage<=totalPages){currentPage=newPage;loadRecordsPage(newPage)}}
+    function showPageJumpInput(){var pageJumpWrap=document.getElementById('pageJumpWrap');var pageInput=document.getElementById('pageJumpInput');if(!pageJumpWrap||!pageInput||!totalPages)return;pageJumpWrap.classList.add('editing');pageInput.style.display='inline-block';pageInput.value=currentPage;setTimeout(function(){pageInput.focus();pageInput.select();},10)}
+    function hidePageJumpInput(){var pageJumpWrap=document.getElementById('pageJumpWrap');var pageInput=document.getElementById('pageJumpInput');if(!pageJumpWrap||!pageInput)return;pageJumpWrap.classList.remove('editing');pageInput.style.display='none';pageInput.value=currentPage;}
+    function jumpToPage(){var pageInput=document.getElementById('pageJumpInput');if(!pageInput||!totalPages)return;var requested=pageInput.value;var pageNumber=parseInt(requested,10);if(isNaN(pageNumber)) {showToast('Please enter a valid page number.','error');pageInput.value=currentPage;hidePageJumpInput();return;}pageNumber=Math.max(1,Math.min(totalPages,pageNumber));if(pageNumber===currentPage){pageInput.value=currentPage;hidePageJumpInput();return;}currentPage=pageNumber;hidePageJumpInput();loadRecordsPage(pageNumber)}
+    
+    function clearFilters(){document.getElementById('searchBox').value='';document.getElementById('filterNature').value='';document.getElementById('filterRegion').value='';document.getElementById('filterStatus').value='';document.getElementById('filterProgress').value='';currentPage=1;renderTable()}
+    function exportColumns(){return[{label:'Sr. No.',key:'srNo'},{label:'Project Name',key:'projectName'},{label:'Nature',key:'nature'},{label:'Client / Employer',key:'client'},{label:'Lead Form',key:'leadForm'},{label:'Associated / JVs',key:'jv'},{label:'Submission Date',key:'submissionDate'},{label:'Current Status',key:'currentStatus'},{label:'Final Status',key:'finalStatus'}]}
+    function hasActiveFilters(){return Boolean(document.getElementById('searchBox').value.trim()||document.getElementById('filterNature').value||document.getElementById('filterRegion').value||document.getElementById('filterStatus').value||document.getElementById('filterProgress').value)}
+    function downloadRecords(format){var filtered=hasActiveFilters(),rows=filtered?filteredRows():records;if(!rows.length){showToast('There are no records to download.','error');return}var columns=exportColumns(),title=filtered?'Filtered Project Records':'All Project Records',table='<table><thead><tr>'+columns.map(function(column){return'<th>'+escapeHtml(column.label)+'</th>'}).join('')+'</tr></thead><tbody>'+rows.map(function(row){return'<tr>'+columns.map(function(column){var value=column.key==='progressStatus'?(row.progressStatus||row.technicalStatus):column.key==='currentStatus'?(row.finalStatus||row.currentStatus||row.financialStatus):row[column.key];return'<td>'+escapeHtml(value||'-')+'</td>'}).join('')+'</tr>'}).join('')+'</tbody></table>';if(format==='excel'){var documentHtml='<html><head><meta charset="UTF-8"></head><body><h2>'+escapeHtml(title)+'</h2>'+table+'</body></html>';saveDownload(new Blob(['\ufeff'+documentHtml],{type:'application/vnd.ms-excel;charset=utf-8'}),title.toLowerCase().replace(/ /g,'-')+'.xls')}else{var printWindow=window.open('','_blank');if(!printWindow){showToast('Please allow pop-ups to create the PDF.','error');return}printWindow.document.write('<!doctype html><html><head><meta charset="UTF-8"><title>'+escapeHtml(title)+'</title><style>body{font-family:Arial,sans-serif;color:#0f172a;padding:24px}h2{font-size:20px;margin:0 0 16px}table{width:100%;border-collapse:collapse;font-size:11px}th{background:#e2e8f0;text-align:left;text-transform:uppercase}th,td{border:1px solid #cbd5e1;padding:7px;vertical-align:top}tr:nth-child(even){background:#f8fafc}@media print{body{padding:0}}</style></head><body><h2>'+escapeHtml(title)+'</h2>'+table+'<script>window.onload=function(){window.print();};<\/script></body></html>');printWindow.document.close()}}
+    function saveDownload(blob,filename){var link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download=filename;document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(link.href)}
+    function deleteRecord(srNo){if(userRole!=='admin'||!srNo||!confirm('Are you sure you want to delete this project record?'))return;google.script.run.withSuccessHandler(function(message){showToast(message);loadRecordsPage(1)}).withFailureHandler(function(error){showToast('Delete failed: '+error.message,'error')}).deleteProject(srNo,authToken)}
+  </script>
+</body>
+</html>

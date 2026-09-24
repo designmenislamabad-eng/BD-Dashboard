@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script>
+    if (new URLSearchParams(window.location.search).get('form') !== '1') {
+      window.location.replace('Login.html');
+    }
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    if (localStorage.getItem('bd_user_role') === 'admin' || localStorage.getItem('bd_login_user') === 'designmenislamabad@gmail.com') document.documentElement.classList.add('role-admin');
+  </script>
+  <title>Project Entry Form - Designmen BD Portal</title>
+  <link rel="icon" type="image/jpeg" href="https://lh3.googleusercontent.com/d/1ZCTtF1EZVR419OA-1pMz4uf0T-DjpukU" sizes="64x64">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary:#2563eb;--primary-hover:#1d4ed8;--primary-light:#eff6ff;
+      --secondary:#4f46e5;--success:#10b981;--success-light:#ecfdf5;
+      --warning:#f59e0b;--warning-light:#fffbeb;--danger:#ef4444;--danger-light:#fef2f2;
+      --info:#06b6d4;--info-light:#ecfeff;
+      --slate-50:#f8fafc;--slate-100:#f1f5f9;--slate-200:#e2e8f0;
+      --slate-300:#cbd5e1;--slate-700:#334155;--slate-800:#1e293b;--slate-900:#0f172a;
+      --font-main:'Outfit',sans-serif;
+      --shadow-sm:0 1px 2px 0 rgba(0,0,0,.05);
+      --shadow-md:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);
+      --shadow-lg:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);
+      --radius-sm:6px;--radius-md:12px;--radius-lg:16px;
+      --transition:all .25s cubic-bezier(.4,0,.2,1);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:var(--font-main);background:var(--slate-50);color:var(--slate-900);line-height:1.5;}
+    .app-layout{display:flex;min-height:100vh;}
+
+    /* SIDEBAR */
+    .sidebar{width:280px;background:var(--slate-900);color:white;padding:2rem 1.5rem;display:flex;flex-direction:column;position:fixed;height:100vh;z-index:100;}
+    .brand-section{display:flex;align-items:center;gap:.75rem;margin-bottom:3rem;}
+    .brand-logo{width:40px;height:40px;border-radius:0;display:block;object-fit:cover;box-shadow:0 4px 12px rgba(37,99,235,.3);}
+    .brand-info h1{font-size:1.15rem;font-weight:700;letter-spacing:.5px;line-height:1.2;}
+    .brand-info span{font-size:.75rem;color:var(--slate-300);text-transform:uppercase;letter-spacing:1px;}
+    .nav-list{list-style:none;display:flex;flex-direction:column;gap:.5rem;}
+    .nav-item button{width:100%;display:flex;align-items:center;gap:1rem;background:none;border:none;color:var(--slate-300);padding:.85rem 1rem;font-family:var(--font-main);font-size:.95rem;font-weight:500;border-radius:var(--radius-md);cursor:pointer;text-align:left;transition:var(--transition);}
+    .nav-item button:hover{background:rgba(255,255,255,.05);color:white;}
+    .nav-item.active button{background:var(--primary);color:white;box-shadow:0 4px 12px rgba(37,99,235,.25);}
+    .nav-item button svg{width:20px;height:20px;fill:currentColor;flex-shrink:0;}
+    .sidebar-footer{margin-top:auto;padding-top:1rem;border-top:1px solid rgba(255,255,255,.1);font-size:.75rem;color:var(--slate-300);}
+    .menu-toggle{display:none;background:none;border:none;color:var(--slate-900);cursor:pointer;padding:.35rem .6rem;border-radius:var(--radius-sm);font:600 .85rem var(--font-main);}
+    .auth-pending #navForm,.employee #navForm{display:none !important;}
+    .role-admin .auth-pending #navForm{display:list-item !important;}
+
+    /* MAIN */
+    .main-content{flex:1;margin-left:280px;padding:2.5rem;min-width:0;}
+    .top-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;padding-bottom:1.25rem;border-bottom:1px solid var(--slate-200);}
+    .page-title h2{font-size:1.75rem;font-weight:700;}
+    .page-title p{font-size:.9rem;color:var(--slate-700);}
+
+    /* SEARCH PANEL */
+    .search-panel{background:white;border:2px solid var(--primary);border-radius:var(--radius-lg);padding:1.5rem;margin-bottom:2rem;box-shadow:0 0 0 4px rgba(37,99,235,.06);}
+    .search-panel-header{display:flex;align-items:center;gap:.65rem;margin-bottom:1rem;}
+    .search-panel-header svg{width:22px;height:22px;fill:var(--primary);}
+    .search-panel-header h3{font-size:1.05rem;font-weight:700;color:var(--primary);}
+    .search-panel-header span{font-size:.8rem;color:var(--slate-700);}
+    .search-input-row{display:flex;gap:.75rem;align-items:center;}
+    .search-input-wrap{flex:1;position:relative;}
+    .search-input-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;fill:var(--slate-300);}
+    .search-input-wrap input{width:100%;padding:.75rem 1rem .75rem 2.6rem;font-family:var(--font-main);font-size:.95rem;border:1.5px solid var(--slate-200);border-radius:var(--radius-md);outline:none;transition:var(--transition);}
+    .search-input-wrap input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.12);}
+    .btn-search{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--font-main);font-size:.9rem;font-weight:600;padding:.72rem 1.4rem;background:var(--primary);color:white;border:none;border-radius:var(--radius-md);cursor:pointer;transition:var(--transition);white-space:nowrap;}
+    .btn-search:hover{background:var(--primary-hover);}
+    /* results dropdown */
+    .search-results{margin-top:.75rem;border:1px solid var(--slate-200);border-radius:var(--radius-md);overflow:hidden;display:none;}
+    .search-results.visible{display:block;}
+    .result-item{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;cursor:pointer;border-bottom:1px solid var(--slate-100);transition:background .15s;}
+    .result-item:last-child{border-bottom:none;}
+    .result-item:hover{background:var(--primary-light);}
+    .result-item-no{width:32px;height:32px;background:var(--primary-light);color:var(--primary);font-weight:700;font-size:.8rem;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .result-item-info strong{display:block;font-size:.9rem;font-weight:600;color:var(--slate-900);}
+    .result-item-info span{font-size:.78rem;color:var(--slate-700);}
+    .result-item-badge{margin-left:auto;font-size:.72rem;font-weight:600;padding:.2rem .6rem;border-radius:9999px;background:var(--info-light);color:var(--info);}
+    .no-results{padding:1.25rem;text-align:center;color:var(--slate-300);font-size:.9rem;}
+
+    /* EDIT INDICATOR */
+    .edit-indicator{display:none;align-items:center;gap:.65rem;background:linear-gradient(135deg,var(--warning-light),#fff7e6);border:1px solid var(--warning);border-radius:var(--radius-md);padding:.85rem 1.15rem;margin-bottom:1.5rem;}
+    .edit-indicator.visible{display:flex;}
+    .edit-indicator svg{width:20px;height:20px;fill:var(--warning);}
+    .edit-indicator span{font-size:.9rem;font-weight:600;color:#92400e;}
+    .edit-indicator button{margin-left:auto;background:none;border:none;color:var(--warning);cursor:pointer;font-size:.8rem;font-weight:600;text-decoration:underline;}
+
+    /* FORM CARD */
+    .form-card{background:white;border:1px solid var(--slate-200);border-radius:var(--radius-lg);padding:2rem;box-shadow:var(--shadow-sm);margin-bottom:1.5rem;}
+    .section-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--primary);border-bottom:2px solid var(--primary-light);padding-bottom:.4rem;margin-bottom:1.25rem;}
+    .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem;}
+    .project-info-grid{grid-template-columns:repeat(5,minmax(0,1fr));}
+    .client-details-grid{grid-template-columns:repeat(3,minmax(0,1fr));}
+    .project-status-grid{grid-template-columns:repeat(3,minmax(0,1fr));}
+    .awarded-date-group{grid-column:1;}
+    .form-group{display:flex;flex-direction:column;gap:.35rem;}
+    .form-group label{font-size:.8rem;font-weight:600;color:var(--slate-700);display:flex;align-items:center;gap:.25rem;}
+    .form-group label .req{color:var(--danger);font-size:.8rem;}
+    .form-group input,.form-group select,.form-group textarea{font-family:var(--font-main);font-size:.9rem;padding:.65rem .85rem;border:1.5px solid var(--slate-200);border-radius:var(--radius-sm);outline:none;transition:var(--transition);width:100%;color:var(--slate-900);background:white;}
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.1);}
+    .form-group input.filled{border-color:var(--success);background:var(--success-light);}
+    .form-group textarea{resize:vertical;min-height:80px;}
+    .tracking-controls{display:flex;align-items:center;gap:.6rem;margin-bottom:.85rem;padding:.65rem;background:var(--primary-light);border:1px solid #dbeafe;border-radius:var(--radius-md);flex-wrap:wrap;}
+    .tracking-controls input[type="date"]{width:auto;min-width:150px;padding:.5rem .65rem;border:1px solid #bfdbfe;border-radius:var(--radius-sm);background:white;color:var(--slate-800);font-size:.82rem;box-shadow:var(--shadow-sm);}
+    .tracking-controls input[type="date"]:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.12);}
+    .tracking-controls .btn{padding:.5rem .8rem;font-size:.78rem;border-radius:var(--radius-sm);box-shadow:0 2px 5px rgba(37,99,235,.2);}
+    textarea.height-grow{resize:vertical;overflow:auto;min-height:42px;max-height:180px;width:100%;}
+    textarea.auto-grow{resize:both;overflow:auto;min-height:42px;max-height:180px;min-width:100%;max-width:480px;position:relative;z-index:1;transition:height .12s ease;}
+    textarea.auto-grow:focus{z-index:5;}
+    .width-mirror{position:absolute;visibility:hidden;white-space:pre;pointer-events:none;top:0;left:0;}
+    input[type="date"]{cursor:pointer;}
+
+    /* FORM ACTIONS */
+    .form-actions{display:flex;justify-content:flex-end;gap:.85rem;flex-wrap:wrap;padding:1.25rem 2rem;background:var(--slate-50);border-top:1px solid var(--slate-200);border-radius:0 0 var(--radius-lg) var(--radius-lg);}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;font-family:var(--font-main);font-size:.9rem;font-weight:600;padding:.7rem 1.5rem;border-radius:var(--radius-md);border:1px solid transparent;cursor:pointer;transition:var(--transition);}
+    .btn-primary{background:var(--primary);color:white;}
+    .btn-primary:hover{background:var(--primary-hover);}
+    .btn-success{background:var(--success);color:white;}
+    .btn-success:hover{background:#059669;}
+    .btn-secondary{background:white;border-color:var(--slate-200);color:var(--slate-700);}
+    .btn-secondary:hover{background:var(--slate-100);}
+    .btn-danger{background:var(--danger);color:white;}
+    .btn-danger:hover{background:#dc2626;}
+    .btn:disabled{opacity:.6;cursor:not-allowed;}
+
+    /* LOADING */
+    .loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.85);backdrop-filter:blur(2px);z-index:3000;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:var(--transition);}
+    .loading-overlay.active{opacity:1;pointer-events:auto;}
+    .spinner{width:44px;height:44px;border:4px solid var(--slate-200);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:.9rem;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .loading-overlay p{font-weight:600;color:var(--slate-800);}
+    /* TOAST */
+    .toast-container{position:fixed;bottom:24px;right:24px;z-index:5000;display:flex;flex-direction:column;gap:10px;}
+    .toast{background:var(--slate-900);color:white;padding:.9rem 1.4rem;border-radius:var(--radius-md);box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:.75rem;font-size:.875rem;font-weight:500;border-left:4px solid var(--primary);opacity:0;transform:translateY(20px);animation:toastIn .3s ease forwards;}
+    .toast.success{border-left-color:var(--success);}
+    .toast.error{border-left-color:var(--danger);}
+    @keyframes toastIn{to{opacity:1;transform:translateY(0);}}
+    .toast-close{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.5);cursor:pointer;font-size:1.1rem;line-height:1;}
+    .mobile-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:90;}
+    .mobile-overlay.visible{display:block;}
+
+    @media(max-width:768px){
+      .sidebar{display:block;transform:translateX(-105%);position:fixed;left:0;top:0;bottom:0;transition:transform .25s ease;z-index:120;}
+      .sidebar.open{transform:translateX(0);}
+      .menu-toggle{display:block;}
+      .main-content{margin-left:0;padding:1.25rem;}
+      .top-header{gap:1rem;}
+      .client-details-grid{grid-template-columns:1fr;}
+      .project-status-grid{grid-template-columns:1fr;}
+      .awarded-date-group{grid-column:auto;}
+      .project-info-grid{grid-template-columns:1fr;}
+      .search-input-row{flex-direction:column;align-items:stretch;}
+      .btn-search{width:100%;}
+      .search-panel-header{flex-wrap:wrap;}
+      .edit-indicator{align-items:flex-start;flex-wrap:wrap;}
+      .edit-indicator button{margin-left:0;}
+    }
+    .brand-logo{width:40px;height:40px;padding:0;border:0;border-radius:0;background:transparent;display:block;object-fit:contain}
+  </style>
+</head>
+<body class="auth-pending">
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="spinner"></div>
+  <p id="loadingMsg">Please wait...</p>
+</div>
+<div id="mobileOverlay" class="mobile-overlay" onclick="closeMobileSidebar()"></div>
+<!-- Toast -->
+<div id="toastContainer" class="toast-container"></div>
+
+<div class="app-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand-section">
+      <img class="brand-logo" src="https://lh3.googleusercontent.com/d/1ZCTtF1EZVR419OA-1pMz4uf0T-DjpukU" alt="DESIGNMEN logo">
+      <div class="brand-info">
+        <h1>DESIGNMEN</h1>
+        <span>BD Portal</span>
+      </div>
+    </div>
+    <nav>
+      <ul class="nav-list">
+        <li class="nav-item" id="navDashboard">
+          <button onclick="goToDashboard()">
+            <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+            Dashboard Overview
+          </button>
+        </li>
+        <li class="nav-item active" id="navForm" style="display:none">
+          <button>
+            <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+            Project Entry Form
+          </button>
+        </li>
+        <li class="nav-item" id="navRecords">
+          <button onclick="goToRecords()">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16v2H4V4zm0 5h16v2H4V9zm0 5h16v2H4v-2zm0 5h10v2H4v-2z"/></svg>
+            All Projects Record
+          </button>
+        </li>
+      </ul>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn btn-danger" onclick="logoutUser()" style="width:100%;margin-bottom:1rem;padding:.55rem 1rem;font-size:.8rem;">Logout</button>
+      <p style="font-weight:600;">Designmen Consulting</p>
+      <p>Engineers (Pvt) Ltd.</p>
+      <p style="opacity:.5;margin-top:.25rem;">BD Dashboard v2.1</p>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <header class="top-header">
+      <button class="menu-toggle" onclick="toggleMobileSidebar()">Menu</button>
+      <div class="page-title">
+        <h2>Project Entry Form</h2>
+        <p>Add a new project or search to edit an existing record.</p>
+      </div>
+      <button class="btn btn-secondary" onclick="goToDashboard()" style="font-size:.85rem;">
+        <svg style="width:16px;height:16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l9-9 9 9M5 10v9a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1v-9"/></svg>
+        Back to Dashboard
+      </button>
+    </header>
+
+    <!-- SEARCH & EDIT PANEL -->
+    <div class="search-panel">
+      <div class="search-panel-header">
+        <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        <h3>Search &amp; Edit Existing Record</h3>
+        <span>— type Sr. No. or Project Name to find a record</span>
+      </div>
+      <div class="search-input-row">
+        <div class="search-input-wrap">
+          <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input type="text" id="searchInput" placeholder="Search by Sr. No. or Project Name..." autocomplete="off" oninput="onSearchInput()">
+        </div>
+        <button class="btn-search" onclick="performSearch()">
+          <svg style="width:16px;height:16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          Search
+        </button>
+        <button class="btn btn-secondary" onclick="clearAndNewRecord()">+ New Record</button>
+      </div>
+      <div id="searchResults" class="search-results"></div>
+    </div>
+
+    <!-- EDIT MODE INDICATOR -->
+    <div id="editIndicator" class="edit-indicator">
+      <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+      <span id="editIndicatorText">Editing: Record #—</span>
+      <button onclick="clearAndNewRecord()">✕ Cancel Edit / Add New</button>
+    </div>
+
+    <!-- FORM -->
+    <form id="projectForm" onsubmit="return false;">
+      <input type="hidden" id="srNo" value="">
+
+      <!-- Section 1: Project Info -->
+      <div class="form-card">
+        <div class="section-label">1 · Project Information</div>
+        <div class="form-grid project-info-grid">
+          <div class="form-group" style="grid-column:1/-1;">
+            <label>Project Name <span class="req">*</span></label>
+            <input type="text" id="projectName" placeholder="Enter full project name..." required>
+          </div>
+          <div class="form-group">
+            <label>Nature <span class="req">*</span></label>
+            <select id="nature" required>
+              <option value="">— Select —</option>
+              <option>RFP</option><option>EOI</option><option>PQD</option>
+              <option>EPC</option><option>QTN</option>
+              <option>Financial</option><option>Enlistment/Portal</option><option>Others</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Sector</label>
+            <select id="sector">
+              <option value="">— Select —</option>
+              <option>Buildings</option>
+              <option>Infrastructure</option>
+              <option>Energy/Hydropower</option>
+              <option>Water Management</option>
+              <option>Roads</option>
+              <option>Bridges</option>
+              <option>Others</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Region</label>
+            <select id="region">
+              <option value="">— Select —</option>
+              <option>Federal</option><option>Punjab</option><option>KPK</option>
+              <option>Sindh</option><option>Baluchistan</option><option>GB</option>
+              <option>AJ&amp;K</option><option>All Pakistan</option><option>International</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Lead Form</label>
+            <textarea id="leadForm" class="height-grow" rows="1" placeholder="Lead Form (if any)"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Associated / JVs</label>
+            <textarea id="jv" class="height-grow" rows="1" placeholder="Associated or JV firm name (if any)"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Client Info -->
+      <div class="form-card">
+        <div class="section-label">2 · Client Details</div>
+        <div class="form-grid client-details-grid">
+          <div class="form-group" style="grid-column:1/-1;">
+            <label>Client / Employer</label>
+            <input type="text" id="client" placeholder="Client organization name...">
+          </div>
+          <div class="form-group" style="position:relative;">
+            <label>Address</label>
+            <textarea id="clientAddress" class="auto-grow" rows="1" placeholder="Client address"></textarea>
+            <span class="width-mirror" id="clientAddressMirror"></span>
+          </div>
+          <div class="form-group">
+            <label>Contact</label>
+            <input type="text" id="contact" placeholder="Enter contact details">
+          </div>
+          <div class="form-group">
+            <label>Dealing Person</label>
+            <input type="text" id="dealingAddress" placeholder="Dealing person's address">
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Key Dates -->
+      <div class="form-card">
+        <div class="section-label">3 · Key Dates</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Advertising Date</label>
+            <input type="date" id="advertisingDate">
+          </div>
+          <div class="form-group">
+            <label>Submission Date</label>
+            <input type="date" id="submissionDate">
+          </div>
+          <div class="form-group">
+            <label>Technical Opening</label>
+            <input type="date" id="technicalOpening">
+          </div>
+          <div class="form-group">
+            <label>Financial Opening</label>
+            <input type="date" id="financialOpening">
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Status -->
+      <div class="form-card">
+        <div class="section-label">4 · Project Status</div>
+        <div class="form-grid project-status-grid">
+          <div class="form-group">
+            <label>Progress Status</label>
+            <select id="progressStatus">
+              <option value="">— Select —</option>
+              <option>Working</option>
+              <option>Submitted</option>
+              <option>Proposal Prepared Only</option>
+              <option>Pending</option>
+              <option>Cancelled</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Current Status</label>
+            <select id="currentStatus">
+              <option value="">— Select —</option>
+              <option>Technical Qualified</option>
+              <option>Technical Disqualified</option>
+              <option>Prequalified</option>
+              <option>Not Prequalified</option>
+              <option>Client Not Responded</option>
+              <option>Pending/Under Evaluation</option>
+              <option>Not Applied</option>
+              <option>Cancelled</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Bid Security</label>
+            <input type="text" id="bidSecurity" placeholder="Amount or N/A">
+          </div>
+          <div class="form-group">
+            <label>Quoted Financial Amount</label>
+            <input type="text" id="quotedFinancialAmount" placeholder="Enter quoted amount">
+          </div>
+          <div class="form-group">
+            <label>Financial Bid Ranking</label>
+            <input type="text" id="financialBidRanking" placeholder="Enter bid ranking">
+          </div>
+          <div class="form-group">
+            <label>Final Status</label>
+            <select id="finalStatus">
+              <option value="">— Select —</option>
+              <option>Awarded</option>
+              <option>Not Awarded</option>
+              <option>Not Applied</option>
+              <option>Granted</option>
+              <option>Not Granted</option>
+              <option>Prequalified</option>
+              <option>Not Prequalified</option>
+              <option>Client Not Responded</option>
+              <option>Pending/Under Evaluation</option>
+              <option>Cancelled</option>
+            </select>
+          </div>
+          <div class="form-group awarded-date-group">
+            <label>Awarded/Granted Date</label>
+            <input type="date" id="awardedGrantedDate">
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 5: Participant Detail -->
+      <div class="form-card">
+        <div class="section-label">5 · Participant's Detail</div>
+        <div class="form-group">
+          <textarea id="participantDetail" rows="3" placeholder="Enter participant details..."></textarea>
+        </div>
+      </div>
+
+      <!-- Section 6: Progress Tracking -->
+      <div class="form-card">
+        <div class="section-label">6 · Progress Tracking</div>
+        <div class="tracking-controls">
+          <input type="date" id="trackingDate" aria-label="Tracking date">
+          <button type="button" class="btn btn-primary" onclick="insertTrackingDate()">Insert Date</button>
+        </div>
+        <div class="form-group">
+          <textarea id="progressTracking" rows="3" placeholder="Track project progress, updates, and follow-up actions..."></textarea>
+        </div>
+      </div>
+
+      <!-- Section 7: Remarks -->
+      <div class="form-card" style="border-radius:var(--radius-lg) var(--radius-lg) 0 0;border-bottom:none;">
+        <div class="section-label">7 · Remarks</div>
+        <div class="form-group">
+          <textarea id="remarks" rows="3" placeholder="Additional notes, observations, or follow-up actions..."></textarea>
+        </div>
+      </div>
+      <!-- Form Actions -->
+      <div class="form-actions" style="border-radius:0 0 var(--radius-lg) var(--radius-lg);border:1px solid var(--slate-200);border-top:none;background:var(--slate-50);">
+        <button type="button" class="btn btn-secondary" onclick="clearAndNewRecord()">🗑 Clear Form</button>
+        <button type="button" class="btn btn-success" id="submitBtn" onclick="handleSubmit()">
+          <svg style="width:16px;height:16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          <span id="submitBtnText">Save New Project</span>
+        </button>
+      </div>
+    </form>
+
+  </main>
+</div>
+
+<script>
+  // ─── State ──────────────────────────────────────────────
+  var allRecords = [];
+  var authToken = '';
+  var isEditMode = false;
+
+  function toggleMobileSidebar() {
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('mobileOverlay');
+    if (!sidebar) return;
+    sidebar.classList.toggle('open');
+    if (overlay) {
+      overlay.classList.toggle('visible', sidebar.classList.contains('open'));
+    }
+  }
+
+  function closeMobileSidebar() {
+    var sidebar = document.getElementById('sidebar');
+    var overlay = document.getElementById('mobileOverlay');
+    if (sidebar) sidebar.classList.remove('open');
+    if (overlay) overlay.classList.remove('visible');
+  }
+
+  // ─── Init ───────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', function() {
+    setupProjectNameFormatting();
+    if (typeof google === 'undefined' || !google.script || !google.script.run) {
+      document.body.classList.remove('employee');
+      var staticRecordsNav = document.getElementById('navRecords');
+      if (staticRecordsNav) staticRecordsNav.style.display = 'list-item';
+      if (!localStorage.getItem('bd_access_token')) {
+        window.location.replace('Login.html');
+        return;
+      }
+      loadStaticFormRecords();
+      fetch('https://elymgmzexvrbxmlzoohf.supabase.co/auth/v1/user', {headers:{apikey:'sb_publishable_hnTeB0bxmdQE5ugTBKuPCQ_DXL38Zqx',Authorization:'Bearer '+localStorage.getItem('bd_access_token')}})
+        .then(function(response){if(!response.ok)throw new Error('Session expired');return response.json();})
+        .then(function(user){if(String(user.email||'').trim().toLowerCase()!=='designmenislamabad@gmail.com'){window.location.replace('Dashboard.html');return}localStorage.setItem('bd_user_role','admin');document.documentElement.classList.add('role-admin');document.getElementById('navForm').style.display='list-item';document.body.classList.remove('auth-pending');loadStaticFormRecords();})
+        .catch(function(){localStorage.removeItem('bd_access_token');localStorage.removeItem('bd_refresh_token');window.location.replace('Login.html');});
+      return;
+    }
+    google.script.url.getLocation(function(location) {
+      authToken = location && location.parameter ? location.parameter.token : '';
+      google.script.run.withSuccessHandler(function(user) {
+        localStorage.setItem('bd_user_role', user && user.role === 'admin' ? 'admin' : 'employee');
+        document.body.classList.remove('auth-pending');
+        if (user && user.role !== 'admin') {
+          document.body.classList.add('employee');
+          var formNav = document.getElementById('navForm');
+          if (formNav) formNav.style.display = 'none';
+        } else {
+          var adminFormNav = document.getElementById('navForm');
+          if (adminFormNav) adminFormNav.style.display = 'list-item';
+        }
+        loadAllRecords();
+      }).withFailureHandler(function() {
+        loadAllRecords();
+      }).getSessionUser(authToken);
+    });
+  });
+
+  // ─── Navigation ─────────────────────────────────────────
+  function _ensureUrl(callback) {
+    if (!callback) return;
+    google.script.run
+      .withSuccessHandler(function(url) {
+        callback(url);
+      })
+      .withFailureHandler(function() {
+        callback(window.location.href.split('?')[0]);
+      })
+      .getWebAppUrl();
+  }
+
+  function goToDashboard() {
+    closeMobileSidebar();
+    showLoading('Going to Dashboard...');
+    if (typeof google === 'undefined' || !google.script || !google.script.run) {
+      window.location.href = 'Dashboard.html';
+      return;
+    }
+    _ensureUrl(function(url) {
+      window.top.location.href = url + '?page=dashboard&token=' + encodeURIComponent(authToken);
+    });
+  }
+
+  function goToRecords() {
+    closeMobileSidebar();
+    showLoading('Opening Project Records...');
+    if (typeof google === 'undefined' || !google.script || !google.script.run) {
+      window.location.href = 'Records.html';
+      return;
+    }
+    _ensureUrl(function(url) {
+      window.top.location.href = url + '?page=records&token=' + encodeURIComponent(authToken);
+    });
+  }
+
+  function logoutUser() {
+    localStorage.removeItem('bd_login_user');
+    localStorage.removeItem('bd_user_role');
+    localStorage.removeItem('bd_access_token');
+    localStorage.removeItem('bd_refresh_token');
+    if (typeof google === 'undefined' || !google.script || !google.script.run) {
+      window.location.href = 'Login.html';
+      return;
+    }
+    google.script.run.withSuccessHandler(function() {
+      _ensureUrl(function(url) { window.top.location.href = url + '?page=login'; });
+    }).logoutUser(authToken);
+  }
+
+  // ─── Loading & Toast ────────────────────────────────────
+  function showLoading(msg) {
+    document.getElementById('loadingMsg').innerText = msg || 'Please wait...';
+    document.getElementById('loadingOverlay').classList.add('active');
+  }
+  function hideLoading() {
+    document.getElementById('loadingOverlay').classList.remove('active');
+  }
+  function toast(msg, type) {
+    var c = document.getElementById('toastContainer');
+    var t = document.createElement('div');
+    t.className = 'toast ' + (type || 'success');
+    t.innerHTML = '<span>' + msg + '</span><button class="toast-close" onclick="this.parentElement.remove()">×</button>';
+    c.appendChild(t);
+    setTimeout(function() {
+      t.style.animation = 'toastIn .3s ease reverse';
+      setTimeout(function(){ t.remove(); }, 300);
+    }, 4500);
+  }
+
+  // ─── Load all records for search ────────────────────────
+  function loadAllRecords() {
+    showLoading('Loading records...');
+    google.script.run
+      .withSuccessHandler(function(records) {
+        allRecords = records || [];
+        hideLoading();
+        // Check URL for ?edit= parameter
+        checkEditParam();
+      })
+      .withFailureHandler(function(err) {
+        hideLoading();
+        toast('Could not load records: ' + err.message, 'error');
+      })
+      .getRecords(authToken, true);
+  }
+
+  function loadStaticFormRecords() {
+    showLoading('Loading records...');
+    var anonKey = 'sb_publishable_hnTeB0bxmdQE5ugTBKuPCQ_DXL38Zqx';
+    var accessToken = localStorage.getItem('bd_access_token') || anonKey;
+    fetch('https://elymgmzexvrbxmlzoohf.supabase.co/rest/v1/Project_Entries_Detailed?select=*&order=sr_no.asc', {
+      headers: { apikey: anonKey, Authorization: 'Bearer ' + accessToken }
+    }).then(function(response) {
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem('bd_access_token');
+        localStorage.removeItem('bd_refresh_token');
+        window.location.replace('Login.html');
+        throw new Error('Session expired. Please login again.');
+      }
+      if (!response.ok) throw new Error('Could not load records (' + response.status + ').');
+      return response.json();
+    }).then(function(rows) {
+      allRecords = rows.map(function(row) {
+        return {
+          srNo: row.sr_no, projectName: row.project_name, nature: row.nature,
+          sector: row.sector, region: row.region, leadForm: row.lead_form,
+          jv: row.associated_jvs, client: row.client_employer,
+          clientAddress: row.client_address, contact: row.contact,
+          dealingAddress: row.dealing_person, advertisingDate: row.advertising_date,
+          submissionDate: row.submission_date, technicalOpening: row.technical_opening,
+          financialOpening: row.financial_opening, progressStatus: row.project_progress,
+          currentStatus: row.current_status, bidSecurity: row.bid_security,
+          quotedFinancialAmount: row.quoted_financial_amount,
+          financialBidRanking: row.financial_bid_ranking, finalStatus: row.final_status,
+          awardedGrantedDate: row.awarded_granted_date,
+          participantDetail: row.participants_detail,
+          progressTracking: row.progress_tracking, remarks: row.remarks
+        };
+      });
+      hideLoading();
+      checkStaticEditParam();
+    }).catch(function(error) {
+      hideLoading();
+      toast('Could not load records: ' + error.message, 'error');
+    });
+  }
+
+  // ─── Check if URL has ?edit=srNo ────────────────────────
+  function checkEditParam() {
+    google.script.url.getLocation(function(loc) {
+      var editSr = loc && loc.parameter && loc.parameter.edit;
+      if (editSr) {
+        var rec = allRecords.find(function(r){ return String(r.srNo) === String(editSr); });
+        if (rec) { loadRecordIntoForm(rec); }
+        else { toast('Record #' + editSr + ' not found.', 'error'); }
+      }
+    });
+  }
+
+  function checkStaticEditParam() {
+    var editSr = new URLSearchParams(window.location.search).get('edit');
+    if (!editSr) return;
+    var rec = allRecords.find(function(r) { return String(r.srNo) === String(editSr); });
+    if (rec) loadRecordIntoForm(rec);
+    else toast('Record #' + editSr + ' not found.', 'error');
+  }
+
+  // ─── Search ─────────────────────────────────────────────
+  function onSearchInput() {
+    var q = document.getElementById('searchInput').value.trim();
+    if (q.length >= 1) { performSearch(); }
+    else { hideResults(); }
+  }
+
+  function performSearch() {
+    var q = document.getElementById('searchInput').value.trim().toLowerCase();
+    var resultsDiv = document.getElementById('searchResults');
+    if (!q) { hideResults(); return; }
+
+    var hits = allRecords.filter(function(r) {
+      return String(r.srNo||'').toLowerCase().includes(q) ||
+             String(r.projectName||'').toLowerCase().includes(q) ||
+             String(r.client||'').toLowerCase().includes(q);
+    }).slice(0, 10);
+
+    if (hits.length === 0) {
+      resultsDiv.className = 'search-results visible';
+      resultsDiv.innerHTML = '<div class="no-results">🔍 No matching records found.</div>';
+      return;
+    }
+
+    resultsDiv.className = 'search-results visible';
+    resultsDiv.innerHTML = hits.map(function(r) {
+      return '<div class="result-item" onclick="selectRecord(\'' + r.srNo + '\')">' +
+        '<div class="result-item-no">' + (r.srNo||'?') + '</div>' +
+        '<div class="result-item-info">' +
+          '<strong>' + (r.projectName||'Unnamed') + '</strong>' +
+          '<span>' + (r.client||'No client') + ' &nbsp;|&nbsp; ' + (r.submissionDate||'No date') + '</span>' +
+        '</div>' +
+        '<span class="result-item-badge">' + (r.nature||'—') + '</span>' +
+      '</div>';
+    }).join('');
+  }
+
+  function selectRecord(srNo) {
+    var rec = allRecords.find(function(r){ return String(r.srNo) === String(srNo); });
+    if (!rec) { toast('Record not found!', 'error'); return; }
+    loadRecordIntoForm(rec);
+    hideResults();
+    document.getElementById('searchInput').value = '';
+    // Scroll to form
+    document.getElementById('projectForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function hideResults() {
+    var r = document.getElementById('searchResults');
+    r.className = 'search-results';
+    r.innerHTML = '';
+  }
+
+  // ─── Load record into form fields ───────────────────────
+  function loadRecordIntoForm(rec) {
+    isEditMode = true;
+    document.getElementById('srNo').value = rec.srNo || '';
+    setVal('projectName', rec.projectName);
+    setSelectValue('nature', rec.nature);
+    setSelectValue('sector', rec.sector);
+    setSelectValue('region', rec.region);
+    setVal('leadForm', rec.leadForm);
+    setVal('jv', rec.jv);
+    setVal('client', rec.client);
+    setVal('clientAddress', rec.clientAddress || rec.contactPerson);
+    setVal('contact', rec.contact);
+    setVal('dealingAddress', rec.dealingAddress || rec.dealingPerson);
+    setVal('advertisingDate', rec.advertisingDate);
+    setVal('submissionDate', rec.submissionDate);
+    setVal('technicalOpening', rec.technicalOpening);
+    setVal('financialOpening', rec.financialOpening);
+    setSelectValue('progressStatus', rec.progressStatus || rec.technicalStatus);
+    setSelectValue('currentStatus', rec.currentStatus || rec.financialStatus);
+    setVal('bidSecurity', rec.bidSecurity);
+    setVal('participantDetail', rec.participantDetail);
+    setSelectValue('finalStatus', rec.finalStatus);
+    setVal('awardedGrantedDate', rec.awardedGrantedDate);
+    setVal('quotedFinancialAmount', rec.quotedFinancialAmount);
+    setVal('financialBidRanking', rec.financialBidRanking);
+    setVal('progressTracking', rec.progressTracking);
+    setVal('remarks', rec.remarks);
+    // Update UI
+    document.getElementById('editIndicator').classList.add('visible');
+    document.getElementById('editIndicatorText').innerText = 'Editing: Record #' + rec.srNo + ' — ' + (rec.projectName || '');
+    document.getElementById('submitBtnText').innerText = 'Update Project Record';
+    document.getElementById('submitBtn').style.background = 'var(--warning)';
+    // Mark filled fields
+    highlightFilled();
+    toast('Record #' + rec.srNo + ' loaded for editing ✏', 'success');
+  }
+
+  function setVal(id, val) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.value = val || '';
+  }
+
+  function setSelectValue(id, val) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var candidate = val == null ? '' : String(val).trim();
+    var normalizedCandidate = candidate.toLowerCase();
+    var selectedOption = Array.prototype.slice.call(el.options).find(function(option) {
+      var optionValue = (option.value || '').trim();
+      var optionText = (option.text || '').trim();
+      return optionValue.toLowerCase() === normalizedCandidate ||
+             optionText.toLowerCase() === normalizedCandidate ||
+             optionValue.replace(/\s+/g, ' ').toLowerCase() === normalizedCandidate ||
+             optionText.replace(/\s+/g, ' ').toLowerCase() === normalizedCandidate;
+    });
+    if (selectedOption) {
+      el.value = selectedOption.value;
+      return;
+    }
+    if (!candidate) {
+      el.value = '';
+      return;
+    }
+    var fallbackOption = Array.prototype.slice.call(el.options).find(function(option) {
+      return (option.value || '').toLowerCase().indexOf(normalizedCandidate) !== -1 ||
+             (option.text || '').toLowerCase().indexOf(normalizedCandidate) !== -1;
+    });
+    el.value = fallbackOption ? fallbackOption.value : candidate;
+  }
+
+  function highlightFilled() {
+    var inputs = document.querySelectorAll('.form-group input, .form-group select, .form-group textarea');
+    inputs.forEach(function(el) {
+      if (el.value && el.value.trim() !== '') el.classList.add('filled');
+      else el.classList.remove('filled');
+    });
+  }
+
+  function formatProjectName(value) {
+    var smallWords = ['like', 'is', 'the', 'of', 'for', 'and', 'if', 'a', 'an', 'am', 'i'];
+    var commonAbbreviations = ['RFP', 'EOI', 'PQD', 'EPC', 'QTN', 'RFQ', 'PVT', 'LTD', 'INC', 'LLC', 'USA', 'UK', 'UAE', 'UN', 'WAPDA', 'NHA', 'FWO', 'NESPAK', 'PEC', 'PPRA', 'NTDC', 'LESCO', 'MEPCO', 'KPK', 'AJK', 'GB'];
+    return String(value || '').split(/(\s+)/).map(function(part, index) {
+      if (/^\s+$/.test(part) || !part) return part;
+      var leading = (part.match(/^[^A-Za-z0-9]*/) || [''])[0];
+      var trailing = (part.match(/[^A-Za-z0-9]*$/) || [''])[0];
+      var word = part.slice(leading.length, part.length - trailing.length);
+      var lowerWord = word.toLowerCase();
+      if (!word) return part;
+      if (smallWords.indexOf(lowerWord) !== -1) return leading + lowerWord + trailing;
+      var letters = word.replace(/[^A-Za-z]/g, '');
+      var hasAbbreviationPunctuation = /[0-9.&\/-]/.test(word);
+      var isAbbreviation = commonAbbreviations.indexOf(letters.toUpperCase()) !== -1 || hasAbbreviationPunctuation;
+      if (isAbbreviation) return leading + word.toUpperCase() + trailing;
+      return leading + word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() + trailing;
+    }).join('');
+  }
+
+  function setupProjectNameFormatting() {
+    var projectNameInput = document.getElementById('projectName');
+    if (!projectNameInput) return;
+    projectNameInput.addEventListener('paste', function() {
+      setTimeout(function() {
+        projectNameInput.value = formatProjectName(projectNameInput.value);
+        highlightFilled();
+      }, 0);
+    });
+  }
+
+  // ─── Clear form / New record ─────────────────────────────
+  function clearAndNewRecord() {
+    isEditMode = false;
+    document.getElementById('srNo').value = '';
+    document.getElementById('projectForm').reset();
+    document.getElementById('editIndicator').classList.remove('visible');
+    document.getElementById('submitBtnText').innerText = 'Save New Project';
+    document.getElementById('submitBtn').style.background = 'var(--success)';
+    document.getElementById('searchInput').value = '';
+    hideResults();
+    // Remove filled highlight
+    document.querySelectorAll('.form-group input, .form-group select, .form-group textarea').forEach(function(el){
+      el.classList.remove('filled');
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ─── Submit / Update ────────────────────────────────────
+  function handleSubmit() {
+    var projectName = document.getElementById('projectName').value.trim();
+    var nature = document.getElementById('nature').value;
+
+    if (!projectName) { toast('Project Name is required.', 'error'); document.getElementById('projectName').focus(); return; }
+    if (!nature) { toast('Please select a Nature.', 'error'); document.getElementById('nature').focus(); return; }
+
+    var data = {
+      srNo: document.getElementById('srNo').value || '',
+      projectName: projectName,
+      nature: nature,
+      sector: document.getElementById('sector').value,
+      region: document.getElementById('region').value,
+      leadForm: document.getElementById('leadForm').value,
+      jv: document.getElementById('jv').value,
+      client: document.getElementById('client').value,
+      clientAddress: document.getElementById('clientAddress').value,
+      contact: document.getElementById('contact').value,
+      dealingAddress: document.getElementById('dealingAddress').value,
+      advertisingDate: document.getElementById('advertisingDate').value,
+      submissionDate: document.getElementById('submissionDate').value,
+      technicalOpening: document.getElementById('technicalOpening').value,
+      financialOpening: document.getElementById('financialOpening').value,
+      progressStatus: document.getElementById('progressStatus').value,
+      currentStatus: document.getElementById('currentStatus').value,
+      bidSecurity: document.getElementById('bidSecurity').value,
+      participantDetail: document.getElementById('participantDetail').value,
+      finalStatus: document.getElementById('finalStatus').value,
+      awardedGrantedDate: document.getElementById('awardedGrantedDate').value,
+      quotedFinancialAmount: document.getElementById('quotedFinancialAmount').value,
+      financialBidRanking: document.getElementById('financialBidRanking').value,
+      progressTracking: document.getElementById('progressTracking').value,
+      remarks: document.getElementById('remarks').value
+    };
+
+    var btnText = isEditMode ? 'Updating record...' : 'Saving new project...';
+    showLoading(btnText);
+    document.getElementById('submitBtn').disabled = true;
+
+    if (typeof google === 'undefined' || !google.script || !google.script.run) {
+      saveStaticProject(data);
+      return;
+    }
+
+    google.script.run
+      .withSuccessHandler(function(msg) {
+        hideLoading();
+        document.getElementById('submitBtn').disabled = false;
+        
+        // Show toast with action button to go to dashboard
+        var c = document.getElementById('toastContainer');
+        var t = document.createElement('div');
+        t.className = 'toast success';
+        t.innerHTML = '<span>' + msg + '</span>' +
+          '<button class="toast-action-btn" onclick="goToDashboard()" style="margin-left:auto;background:white;border:none;color:var(--primary);cursor:pointer;font-weight:600;font-size:.8rem;padding:.3rem .6rem;border-radius:4px;">Go to Dashboard →</button>' +
+          '<button class="toast-close" onclick="this.parentElement.remove()">×</button>';
+        c.appendChild(t);
+        setTimeout(function() {
+          t.style.animation = 'toastIn .3s ease reverse';
+          setTimeout(function(){ t.remove(); }, 300);
+        }, 8000);
+      })
+      .withFailureHandler(function(err) {
+        hideLoading();
+        document.getElementById('submitBtn').disabled = false;
+        toast('Error: ' + err.message, 'error');
+      })
+      .saveProject(data, authToken);
+  }
+
+  function saveStaticProject(data) {
+    var baseUrl = 'https://elymgmzexvrbxmlzoohf.supabase.co/rest/v1/Project_Entries_Detailed';
+    var anonKey = 'sb_publishable_hnTeB0bxmdQE5ugTBKuPCQ_DXL38Zqx';
+    var accessToken = localStorage.getItem('bd_access_token') || anonKey;
+    var record = {
+      project_name: data.projectName,
+      nature: data.nature,
+      sector: data.sector || null,
+      region: data.region || null,
+      lead_form: data.leadForm || null,
+      associated_jvs: data.jv || null,
+      client_employer: data.client || null,
+      client_address: data.clientAddress || null,
+      contact: data.contact || null,
+      dealing_person: data.dealingAddress || null,
+      advertising_date: data.advertisingDate || null,
+      submission_date: data.submissionDate || null,
+      technical_opening: data.technicalOpening || null,
+      financial_opening: data.financialOpening || null,
+      project_progress: data.progressStatus || null,
+      current_status: data.currentStatus || null,
+      bid_security: data.bidSecurity || null,
+      quoted_financial_amount: data.quotedFinancialAmount ? Number(String(data.quotedFinancialAmount).replace(/,/g, '')) || null : null,
+      financial_bid_ranking: data.financialBidRanking || null,
+      final_status: data.finalStatus || null,
+      awarded_granted_date: data.awardedGrantedDate || null,
+      participants_detail: data.participantDetail || null,
+      progress_tracking: data.progressTracking || null,
+      remarks: data.remarks || null
+    };
+    var url = baseUrl;
+    var method = 'POST';
+    if (data.srNo) {
+      url += '?sr_no=eq.' + encodeURIComponent(data.srNo) + '&select=*';
+      method = 'PATCH';
+    } else {
+      record.sr_no = 1;
+      fetch(baseUrl + '?select=sr_no&order=sr_no.desc&limit=1', {
+        headers: { apikey: anonKey, Authorization: 'Bearer ' + accessToken }
+      }).then(function(response) { return response.json(); }).then(function(rows) {
+        record.sr_no = rows.length ? Number(rows[0].sr_no || 0) + 1 : 1;
+        return sendStaticProject(url, method, record, anonKey, accessToken);
+      }).then(finishStaticSave).catch(failStaticSave);
+      return;
+    }
+    sendStaticProject(url, method, record, anonKey, accessToken).then(finishStaticSave).catch(failStaticSave);
+  }
+
+  function sendStaticProject(url, method, record, anonKey, accessToken) {
+    return fetch(url, {
+      method: method,
+      headers: { apikey: anonKey, Authorization: 'Bearer ' + (accessToken || anonKey), 'Content-Type': 'application/json', Prefer: 'return=representation' },
+      body: JSON.stringify(record)
+    }).then(function(response) {
+      if (response.status === 401 || response.status === 403) {
+        localStorage.removeItem('bd_access_token');
+        localStorage.removeItem('bd_refresh_token');
+        window.location.replace('Login.html');
+        throw new Error('Session expired. Please login again.');
+      }
+      if (!response.ok) return response.text().then(function(text) { throw new Error(text || 'Supabase save failed (' + response.status + ').'); });
+      return response.json();
+    }).then(function(rows) {
+      if (method === 'PATCH' && (!Array.isArray(rows) || !rows.length)) {
+        throw new Error('Record was not updated. Please search the record again and retry.');
+      }
+      return rows;
+    });
+  }
+
+  function finishStaticSave() {
+    hideLoading();
+    document.getElementById('submitBtn').disabled = false;
+    toast(isEditMode ? 'Record updated successfully.' : 'Project saved successfully.');
+  }
+
+  function failStaticSave(error) {
+    hideLoading();
+    document.getElementById('submitBtn').disabled = false;
+    toast('Error: ' + error.message, 'error');
+  }
+
+  function insertTrackingDate() {
+    var dateInput = document.getElementById('trackingDate');
+    var trackingField = document.getElementById('progressTracking');
+    if (!dateInput.value) {
+      dateInput.focus();
+      toast('Please select a date first.', 'error');
+      return;
+    }
+
+    var entryPrefix = '[' + dateInput.value + ']: ';
+    var existingText = trackingField.value.trimEnd();
+    trackingField.value = existingText ? existingText + '\n' + entryPrefix : entryPrefix;
+    trackingField.focus();
+    trackingField.setSelectionRange(trackingField.value.length, trackingField.value.length);
+  }
+
+  // Close search results when clicking outside
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.search-panel')) hideResults();
+  });
+
+  const LIMITS = { maxWidth: 480, maxHeight: 180 };
+
+  function autoGrow(textarea, mirror) {
+    const currentH = parseFloat(textarea.style.height) || textarea.offsetHeight;
+    textarea.style.height = 'auto';
+    const neededH = textarea.scrollHeight + 2;
+    textarea.style.height = Math.min(Math.max(neededH, currentH), LIMITS.maxHeight) + 'px';
+
+    const longestLine = textarea.value.split('\n')
+      .reduce((longest, line) => (line.length > longest.length ? line : longest), '');
+    mirror.textContent = longestLine || textarea.placeholder;
+    const neededW = mirror.offsetWidth + 28;
+    const currentW = parseFloat(textarea.style.width) || textarea.offsetWidth;
+    textarea.style.width = Math.min(Math.max(neededW, currentW), LIMITS.maxWidth) + 'px';
+  }
+
+  document.querySelectorAll('textarea.auto-grow').forEach(function(textarea) {
+    const mirror = document.getElementById(textarea.id + 'Mirror');
+    if (!mirror) return;
+    const computedStyle = getComputedStyle(textarea);
+    mirror.style.font = computedStyle.font;
+    mirror.style.letterSpacing = computedStyle.letterSpacing;
+    textarea.addEventListener('input', function() {
+      autoGrow(textarea, mirror);
+    });
+  });
+</script>
+</body>
+</html>
